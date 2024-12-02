@@ -20,14 +20,40 @@ export default function HomeScreen() {
     const [loading, setLoading] = useState(false);
   
     async function handleInput(command: string) {
-      setLoading(true);
-  
-      const prompt = `${story}\n\nUser: ${command}\nAI: `;
-      const aiResponse = await getAIResponse(prompt);
-  
-      setStory((prevStory) => `${prevStory}\n\nUser: ${command}\nAI: ${aiResponse}`);
-      setLoading(false);
-    }
+        setLoading(true);
+      
+        // Prepare the game state to include in the prompt
+        const gameState = `
+        Player Stats:
+        - Health: 100
+        - Gold: 50
+        - Food: 30
+        - Wood: 20
+      
+        Inventory:
+        - Sword
+        - Shield
+      
+        Story So Far:
+        ${story}
+        `;
+      
+        // Create the prompt combining game state and player input
+        const prompt = `
+        ${gameState}
+      
+        Player's Command: ${command}
+      
+        Continue the story based on the player's command.
+        `;
+      
+        const aiResponse = await getAIResponse(prompt);
+      
+        setStory((prevStory) => `${prevStory}\n\n${aiResponse}`);
+        setLoading(false);
+      }
+      
+
   const [inventoryVisible, setInventoryVisible] = useState(false);
 
   const [input, setInput] = useState('');
