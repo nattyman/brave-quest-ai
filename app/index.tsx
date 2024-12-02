@@ -11,9 +11,27 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
+import { getAIResponse } from '../utils/ai';
 
 export default function HomeScreen() {
+    const [story, setStory] = useState(
+      'Welcome, brave adventurer! The journey ahead is perilous. Type your command to begin...'
+    );
+    const [loading, setLoading] = useState(false);
+  
+    async function handleInput(command: string) {
+      setLoading(true);
+  
+      const prompt = `${story}\n\nUser: ${command}\nAI: `;
+      const aiResponse = await getAIResponse(prompt);
+  
+      setStory((prevStory) => `${prevStory}\n\nUser: ${command}\nAI: ${aiResponse}`);
+      setLoading(false);
+    }
   const [inventoryVisible, setInventoryVisible] = useState(false);
+
+  const [input, setInput] = useState('');
+
 
   return (
     <KeyboardAvoidingView
@@ -40,9 +58,8 @@ export default function HomeScreen() {
 
           {/* Story Pane */}
           <ScrollView style={styles.storyPane}>
-            <Text style={styles.storyText}>
-              Welcome, brave adventurer! The journey ahead is perilous. Type your command to begin...
-            </Text>
+            <Text style={styles.storyText}>{story}</Text>
+           {loading && <Text style={styles.loadingText}>Thinking...</Text>}
           </ScrollView>
 
           {/* Action Buttons */}
@@ -63,16 +80,29 @@ export default function HomeScreen() {
 
           {/* Input Box */}
           <View style={styles.inputContainer}>
-            <View style={styles.inputBox}>
-              <TextInput
-                style={styles.input}
-                placeholder="Type your command here..."
-                onSubmitEditing={Keyboard.dismiss}
-              />
-              <TouchableOpacity style={styles.sendButton}>
-                <Text style={styles.sendButtonText}>Send</Text>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.inputBox}>
+          <TextInput
+            style={styles.input}
+            placeholder="Type your command here..."
+            value={input}
+            onChangeText={setInput} // Updates the input value on every change
+            />
+
+
+<TouchableOpacity
+  style={styles.sendButton}
+  onPress={() => {
+    if (input.trim()) {
+      handleInput(input.trim());
+      setInput(''); // Clear the input field after sending
+    }
+  }}
+>
+  <Text style={styles.sendButtonText}>Send</Text>
+</TouchableOpacity>
+
+</View>
+
           </View>
 
           {/* Inventory Panel */}
@@ -108,6 +138,7 @@ export default function HomeScreen() {
     </KeyboardAvoidingView>
   );
 }
+  
 
 const styles = StyleSheet.create({
   container: {
@@ -148,6 +179,10 @@ const styles = StyleSheet.create({
   storyText: {
     fontSize: 16,
   },
+  loadingText: {
+    fontStyle: 'italic',
+    color: 'gray',
+  },  
   actionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-around',

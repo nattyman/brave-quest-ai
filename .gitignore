@@ -37,3 +37,6 @@ yarn-error.*
 
 app-example
 Expo-README.md
+.env
+#This needs to be added back after the apikey is hidden
+app.config.js
