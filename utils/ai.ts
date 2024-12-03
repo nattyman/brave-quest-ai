@@ -21,7 +21,7 @@ export async function getAIResponse(prompt: string): Promise<string> {
         },
         { role: 'user', content: prompt },
       ],
-      model: 'gpt-3.5-turbo', // Use 'gpt-3.5-turbo' if 'gpt-4' is not available
+      model: 'gpt-4o-mini', // Use 'gpt-3.5-turbo' if 'gpt-4' is not available
       max_tokens: 200,
     });
 

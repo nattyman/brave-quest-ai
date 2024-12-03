@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,56 +14,61 @@ import {
 import { getAIResponse } from '../utils/ai';
 
 export default function HomeScreen() {
-    const [story, setStory] = useState(
-      'Welcome, brave adventurer! The journey ahead is perilous. Type your command to begin...'
-    );
-    const [loading, setLoading] = useState(false);
-  
-    async function handleInput(command: string) {
-        setLoading(true);
-      
-        // Prepare the game state to include in the prompt
-        const gameState = `
-        Player Stats:
-        - Health: 100
-        - Gold: 50
-        - Food: 30
-        - Wood: 20
-      
-        Inventory:
-        - Sword
-        - Shield
-      
-        Story So Far:
-        ${story}
-        `;
-      
-        // Create the prompt combining game state and player input
-        const prompt = `
-        ${gameState}
-      
-        Player's Command: ${command}
-      
-        Continue the story based on the player's command.
-        `;
-      
-        const aiResponse = await getAIResponse(prompt);
-      
-        setStory((prevStory) => `${prevStory}\n\n${aiResponse}`);
-        setLoading(false);
-      }
-      
-
+  const [story, setStory] = useState(
+    'Welcome, brave adventurer! The journey ahead is perilous. Type your command to begin...'
+  );
+  const [loading, setLoading] = useState(false);
   const [inventoryVisible, setInventoryVisible] = useState(false);
-
   const [input, setInput] = useState('');
 
+  // Ref for auto-scrolling
+  const storyScrollViewRef = useRef<ScrollView>(null);
+
+  // Auto-scroll to the bottom when the story updates
+  useEffect(() => {
+    storyScrollViewRef.current?.scrollToEnd({ animated: true });
+  }, [story]);
+
+  async function handleInput(command: string) {
+    setLoading(true);
+
+    // Prepare the game state to include in the prompt
+    const gameState = `
+    Player Stats:
+    - Health: 100
+    - Gold: 50
+    - Food: 30
+    - Wood: 20
+
+    Inventory:
+    - Sword
+    - Shield
+
+    Story So Far:
+    ${story}
+    `;
+
+    // Create the prompt combining game state and player input
+    const prompt = `
+    ${gameState}
+
+    Player's Command: ${command}
+
+    Continue the story based on the player's command.
+    `;
+
+    const aiResponse = await getAIResponse(prompt);
+
+    setStory((prevStory) => `${prevStory}\n\n${aiResponse}`);
+    setLoading(false);
+  }
 
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0} // Adjust for the height of the header
+      enabled={Platform.OS === 'ios'} // Only enable on iOS
     >
       {/* Dismiss keyboard when tapping outside */}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -83,10 +88,16 @@ export default function HomeScreen() {
           </View>
 
           {/* Story Pane */}
-          <ScrollView style={styles.storyPane}>
+          <ScrollView
+            ref={storyScrollViewRef}
+            style={styles.storyPane}
+            contentContainerStyle={{ flexGrow: 1 }} // Ensures proper scrolling behavior
+            keyboardShouldPersistTaps="handled" // Allows taps to propagate when keyboard is dismissed
+            >
             <Text style={styles.storyText}>{story}</Text>
-           {loading && <Text style={styles.loadingText}>Thinking...</Text>}
-          </ScrollView>
+            {loading && <Text style={styles.loadingText}>Thinking...</Text>}
+            </ScrollView>
+
 
           {/* Action Buttons */}
           <View style={styles.actionButtons}>
@@ -106,65 +117,60 @@ export default function HomeScreen() {
 
           {/* Input Box */}
           <View style={styles.inputContainer}>
-          <View style={styles.inputBox}>
-          <TextInput
-            style={styles.input}
-            placeholder="Type your command here..."
-            value={input}
-            onChangeText={setInput} // Updates the input value on every change
-            />
-
-
-<TouchableOpacity
-  style={styles.sendButton}
-  onPress={() => {
-    if (input.trim()) {
-      handleInput(input.trim());
-      setInput(''); // Clear the input field after sending
-    }
-  }}
->
-  <Text style={styles.sendButtonText}>Send</Text>
-</TouchableOpacity>
-
-</View>
-
+            <View style={styles.inputBox}>
+              <TextInput
+                style={styles.input}
+                placeholder="Type your command here..."
+                value={input}
+                onChangeText={setInput} // Updates the input value on every change
+              />
+              <TouchableOpacity
+                style={styles.sendButton}
+                onPress={() => {
+                  if (input.trim()) {
+                    handleInput(input.trim());
+                    setInput(''); // Clear the input field after sending
+                  }
+                }}
+              >
+                <Text style={styles.sendButtonText}>Send</Text>
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Inventory Panel */}
           {inventoryVisible && (
-  <View style={styles.inventoryPanel}>
-    <Text style={styles.inventoryTitle}>Inventory</Text>
-    <View style={styles.inventoryItem}>
-      <Text>🗡️ Sword</Text>
-      <TouchableOpacity>
-        <Text style={styles.actionButtonText}>Equip</Text>
-      </TouchableOpacity>
-    </View>
-    <View style={styles.inventoryItem}>
-      <Text>🛡️ Shield</Text>
-      <TouchableOpacity>
-        <Text style={styles.actionButtonText}>Equip</Text>
-      </TouchableOpacity>
-    </View>
-    <View style={styles.inventoryItem}>
-      <Text>🍗 Food</Text>
-      <TouchableOpacity>
-        <Text style={styles.actionButtonText}>Use</Text>
-      </TouchableOpacity>
-    </View>
-    <TouchableOpacity style={styles.closeButton} onPress={() => setInventoryVisible(false)}>
-      <Text style={styles.closeButtonText}>Close</Text>
-    </TouchableOpacity>
-  </View>
-)}
-
+            <View style={styles.inventoryPanel}>
+              <Text style={styles.inventoryTitle}>Inventory</Text>
+              <View style={styles.inventoryItem}>
+                <Text>🗡️ Sword</Text>
+                <TouchableOpacity>
+                  <Text style={styles.actionButtonText}>Equip</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.inventoryItem}>
+                <Text>🛡️ Shield</Text>
+                <TouchableOpacity>
+                  <Text style={styles.actionButtonText}>Equip</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.inventoryItem}>
+                <Text>🍗 Food</Text>
+                <TouchableOpacity>
+                  <Text style={styles.actionButtonText}>Use</Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity style={styles.closeButton} onPress={() => setInventoryVisible(false)}>
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          )}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }
-  
+
 
 const styles = StyleSheet.create({
   container: {
