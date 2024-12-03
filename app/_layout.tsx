@@ -3,15 +3,19 @@ import { View, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Slot } from 'expo-router';
 import { GameProvider } from '../src/GameContext';
+import { Stack } from 'expo-router';
+import { DebugProvider } from '../src/DebugContext';
 
 export default function Layout() {
   return (
     <GameProvider>
-      <SafeAreaView style={styles.safeArea}>
-        <View style={styles.container}>
-          <Slot /> {/* This renders your nested screens */}
-        </View>
-      </SafeAreaView>
+      <DebugProvider>
+        <SafeAreaView style={styles.safeArea}>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Slot /> {/* Renders the current screen */}
+          </Stack>
+        </SafeAreaView>
+      </DebugProvider>
     </GameProvider>
   );
 }
@@ -19,11 +23,11 @@ export default function Layout() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#c2a772', // Match the stats bar background to make it seamless
+    backgroundColor: '#c2a772', // Match the stats bar background
   },
   container: {
     flex: 1,
     backgroundColor: '#fef9e7', // Main app background
-    padding: 10,
+    padding: 10, // Move padding inside the container style
   },
 });
