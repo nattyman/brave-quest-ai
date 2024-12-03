@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,97 +11,88 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
 } from 'react-native';
-import { getAIResponse } from '../utils/ai';
+import { getAIResponse } from '../utils/ai'; // Import the AI function
+import { useGame } from '../src/GameContext'; // Import your context
 
 export default function HomeScreen() {
-  const [story, setStory] = useState(
-    'Welcome, brave adventurer! The journey ahead is perilous. Type your command to begin...'
-  );
-  const [loading, setLoading] = useState(false);
-  const [inventoryVisible, setInventoryVisible] = useState(false);
+  const { gameState, updateGameState } = useGame();
   const [input, setInput] = useState('');
-
-  // Ref for auto-scrolling
-  const storyScrollViewRef = useRef<ScrollView>(null);
-
-  // Auto-scroll to the bottom when the story updates
-  useEffect(() => {
-    storyScrollViewRef.current?.scrollToEnd({ animated: true });
-  }, [story]);
+  const [loading, setLoading] = useState(false);
 
   async function handleInput(command: string) {
     setLoading(true);
 
-    // Prepare the game state to include in the prompt
-    const gameState = `
-    Player Stats:
-    - Health: 100
-    - Gold: 50
-    - Food: 30
-    - Wood: 20
-
-    Inventory:
-    - Sword
-    - Shield
-
-    Story So Far:
-    ${story}
-    `;
-
-    // Create the prompt combining game state and player input
     const prompt = `
-    ${gameState}
+      Game State:
+      Player Stats:
+      - Health: ${gameState.playerStats.health}
+      - Gold: ${gameState.playerStats.gold}
+      - Food: ${gameState.playerStats.food}
+      - Wood: ${gameState.playerStats.wood}
 
-    Player's Command: ${command}
+      Inventory:
+      ${gameState.inventory.join(', ')}
 
-    Continue the story based on the player's command.
+      Story So Far:
+      ${gameState.story}
+
+      Player's Command: ${command}
+
+      Instructions: Respond with changes to the game state in this format:
+      {
+        "playerStats": { "health": -10, "gold": 20 },
+        "inventory": ["Potion"],
+        "story": "You took damage but found a potion."
+      }
     `;
 
     const aiResponse = await getAIResponse(prompt);
 
-    setStory((prevStory) => `${prevStory}\n\n${aiResponse}`);
+    try {
+      const changes = JSON.parse(aiResponse);
+      updateGameState({
+        playerStats: {
+          ...gameState.playerStats,
+          health: Math.max(gameState.playerStats.health + (changes.playerStats.health || 0), 0),
+          gold: gameState.playerStats.gold + (changes.playerStats.gold || 0),
+          food: gameState.playerStats.food + (changes.playerStats.food || 0),
+          wood: gameState.playerStats.wood + (changes.playerStats.wood || 0),
+        },
+        inventory: [...gameState.inventory, ...(changes.inventory || [])],
+        story: `${gameState.story}\n\n${changes.story}`,
+      });
+    } catch (error) {
+      console.error('Failed to parse AI response:', error);
+    }
+
     setLoading(false);
   }
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0} // Adjust for the height of the header
-      enabled={Platform.OS === 'ios'} // Only enable on iOS
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
     >
-      {/* Dismiss keyboard when tapping outside */}
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           {/* Stats Bar */}
           <View style={styles.statsBar}>
-            <View style={styles.statsLeft}>
-              <Text style={styles.stat}>❤️ 100</Text>
-              <Text style={styles.stat}>💰 50</Text>
-              <Text style={styles.stat}>🍗 30</Text>
-              <Text style={styles.stat}>🌲 20</Text>
-            </View>
-            <View style={styles.statsRight}>
-              <Text style={styles.equipped}>🗡️ Sword</Text>
-              <Text style={styles.equipped}>🛡️ Shield</Text>
-            </View>
+            <Text style={styles.stat}>❤️ {gameState.playerStats.health}</Text>
+            <Text style={styles.stat}>💰 {gameState.playerStats.gold}</Text>
+            <Text style={styles.stat}>🍗 {gameState.playerStats.food}</Text>
+            <Text style={styles.stat}>🌲 {gameState.playerStats.wood}</Text>
           </View>
 
           {/* Story Pane */}
-          <ScrollView
-            ref={storyScrollViewRef}
-            style={styles.storyPane}
-            contentContainerStyle={{ flexGrow: 1 }} // Ensures proper scrolling behavior
-            keyboardShouldPersistTaps="handled" // Allows taps to propagate when keyboard is dismissed
-            >
-            <Text style={styles.storyText}>{story}</Text>
+          <ScrollView style={styles.storyPane}>
+            <Text style={styles.storyText}>{gameState.story}</Text>
             {loading && <Text style={styles.loadingText}>Thinking...</Text>}
-            </ScrollView>
-
+          </ScrollView>
 
           {/* Action Buttons */}
           <View style={styles.actionButtons}>
-            <TouchableOpacity onPress={() => setInventoryVisible(!inventoryVisible)} style={styles.actionButton}>
+            <TouchableOpacity style={styles.actionButton}>
               <Text style={styles.buttonText}>📦 Inventory</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>
@@ -117,60 +108,29 @@ export default function HomeScreen() {
 
           {/* Input Box */}
           <View style={styles.inputContainer}>
-            <View style={styles.inputBox}>
-              <TextInput
-                style={styles.input}
-                placeholder="Type your command here..."
-                value={input}
-                onChangeText={setInput} // Updates the input value on every change
-              />
-              <TouchableOpacity
-                style={styles.sendButton}
-                onPress={() => {
-                  if (input.trim()) {
-                    handleInput(input.trim());
-                    setInput(''); // Clear the input field after sending
-                  }
-                }}
-              >
-                <Text style={styles.sendButtonText}>Send</Text>
-              </TouchableOpacity>
-            </View>
+            <TextInput
+              style={styles.input}
+              placeholder="Type your command here..."
+              value={input}
+              onChangeText={setInput}
+            />
+            <TouchableOpacity
+              style={styles.sendButton}
+              onPress={() => {
+                if (input.trim()) {
+                  handleInput(input.trim());
+                  setInput('');
+                }
+              }}
+            >
+              <Text style={styles.sendButtonText}>Send</Text>
+            </TouchableOpacity>
           </View>
-
-          {/* Inventory Panel */}
-          {inventoryVisible && (
-            <View style={styles.inventoryPanel}>
-              <Text style={styles.inventoryTitle}>Inventory</Text>
-              <View style={styles.inventoryItem}>
-                <Text>🗡️ Sword</Text>
-                <TouchableOpacity>
-                  <Text style={styles.actionButtonText}>Equip</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.inventoryItem}>
-                <Text>🛡️ Shield</Text>
-                <TouchableOpacity>
-                  <Text style={styles.actionButtonText}>Equip</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.inventoryItem}>
-                <Text>🍗 Food</Text>
-                <TouchableOpacity>
-                  <Text style={styles.actionButtonText}>Use</Text>
-                </TouchableOpacity>
-              </View>
-              <TouchableOpacity style={styles.closeButton} onPress={() => setInventoryVisible(false)}>
-                <Text style={styles.closeButtonText}>Close</Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -199,7 +159,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     fontSize: 12, 
   },
-  
   storyPane: {
     flex: 1,
     backgroundColor: '#fff8e1',
@@ -210,11 +169,12 @@ const styles = StyleSheet.create({
   },
   storyText: {
     fontSize: 16,
+    lineHeight: 22,
   },
   loadingText: {
     fontStyle: 'italic',
     color: 'gray',
-  },  
+  },
   actionButtons: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -234,58 +194,31 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   inputContainer: {
-    justifyContent: 'flex-end', // Ensures the input field stays at the bottom
-  },
-  inputBox: {
     flexDirection: 'row',
     padding: 10,
     backgroundColor: '#f8f4ec',
-    borderTopWidth: 2,
     borderTopColor: '#4b2e05',
+    borderTopWidth: 2,
+    alignItems: 'center',
   },
   input: {
     flex: 1,
     borderWidth: 2,
     borderColor: '#4b2e05',
     borderRadius: 4,
-    padding: 5,
+    padding: 8,
     backgroundColor: '#fff',
+    marginRight: 2,
   },
   sendButton: {
+    padding: 10,
     backgroundColor: '#4b2e05',
     borderRadius: 4,
-    padding: 10,
-    marginLeft: 5,
+    marginLeft: 2,
+
   },
   sendButtonText: {
     color: '#fff',
+    fontSize: 14,
   },
-  inventoryPanel: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#fff8e1',
-    borderTopWidth: 4,
-    borderTopColor: '#4b2e05',
-    padding: 10,
-  },
-  inventoryTitle: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  inventoryItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 5,
-    backgroundColor: '#e6ddc9',
-    borderWidth: 2,
-    borderColor: '#4b2e05',
-    borderRadius: 4,
-    marginBottom: 5,
-  },
-  actionButtonText: {
-    color: '#4b2e05',
-    fontWeight: 'bold',
-  },  
 });
