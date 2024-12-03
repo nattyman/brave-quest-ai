@@ -13,11 +13,15 @@ import {
 } from 'react-native';
 import { getAIResponse } from '../utils/ai'; // Import the AI function
 import { useGame } from '../src/GameContext'; // Import your context
+import { useRouter } from 'expo-router';
+import { useDebug } from '../src/DebugContext';
 
 export default function HomeScreen() {
   const { gameState, updateGameState } = useGame();
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { debug, addMessage, setDebug } = useDebug(); // Get setDebug from useDebug
 
   async function handleInput(command: string) {
     setLoading(true);
@@ -46,7 +50,7 @@ export default function HomeScreen() {
       }
     `;
 
-    const aiResponse = await getAIResponse(prompt);
+    const aiResponse = await getAIResponse(prompt, addMessage);
 
     try {
       const changes = JSON.parse(aiResponse);
@@ -77,12 +81,17 @@ export default function HomeScreen() {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           {/* Stats Bar */}
-          <View style={styles.statsBar}>
-            <Text style={styles.stat}>❤️ {gameState.playerStats.health}</Text>
-            <Text style={styles.stat}>💰 {gameState.playerStats.gold}</Text>
-            <Text style={styles.stat}>🍗 {gameState.playerStats.food}</Text>
-            <Text style={styles.stat}>🌲 {gameState.playerStats.wood}</Text>
-          </View>
+          <TouchableOpacity
+            activeOpacity={1}
+            onLongPress={() => setDebug(!debug)}
+          >
+            <View style={styles.statsBar}>
+              <Text style={styles.stat}>❤️ {gameState.playerStats.health}</Text>
+              <Text style={styles.stat}>💰 {gameState.playerStats.gold}</Text>
+              <Text style={styles.stat}>🍗 {gameState.playerStats.food}</Text>
+              <Text style={styles.stat}>🌲 {gameState.playerStats.wood}</Text>
+            </View>
+          </TouchableOpacity>
 
           {/* Story Pane */}
           <ScrollView style={styles.storyPane}>
@@ -98,8 +107,17 @@ export default function HomeScreen() {
             <TouchableOpacity style={styles.actionButton}>
               <Text style={styles.buttonText}>🗺 Map</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.buttonText}>🔥 Camp</Text>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => {
+                if (debug) {
+                  router.push('/DebugScreen');  // Use leading slash and match case
+                } else {
+                  // Existing Camp action
+                }
+              }}
+            >
+              <Text style={styles.buttonText}>{debug ? 'Debug' : 'Camp'}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>
               <Text style={styles.buttonText}>🔮 Abilities</Text>
