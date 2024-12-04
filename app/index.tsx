@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -22,11 +22,17 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const { debug, addMessage, setDebug } = useDebug(); // Get setDebug from useDebug
+  const scrollViewRef = useRef<ScrollView>(null); // Add a ref for the ScrollView
 
   async function handleInput(command: string) {
     setLoading(true);
 
+    const initialPrompt = gameState.initialQuestionAnswered
+      ? ''
+      : 'Welcome, brave adventurer! What is your name?\n';
+
     const prompt = `
+      ${initialPrompt}
       Game State:
       Player Stats:
       - Health: ${gameState.playerStats.health}
@@ -44,7 +50,7 @@ export default function HomeScreen() {
 
       Instructions: Respond with changes to the game state in this format:
       {
-        "playerStats": { "health": -10, "gold": 20 },
+        "playerStats": { "health": -10, "gold": 20 }, // only + or - responses, 0 for no change
         "inventory": ["Potion"],
         "story": "You took damage but found a potion."
       }
@@ -64,9 +70,13 @@ export default function HomeScreen() {
         },
         inventory: [...gameState.inventory, ...(changes.inventory || [])],
         story: `${gameState.story}\n\n${changes.story}`,
+        initialQuestionAnswered: true, // Set to true after the first response
       });
     } catch (error) {
       console.error('Failed to parse AI response:', error);
+      updateGameState({
+        story: `${gameState.story}\n\n"Sorry, what's that? Mumbling won't get you anywhere." -The game master is very old, hard of hearing, and grumpy. Please try again.`,
+      });
     }
 
     setLoading(false);
@@ -94,7 +104,11 @@ export default function HomeScreen() {
           </TouchableOpacity>
 
           {/* Story Pane */}
-          <ScrollView style={styles.storyPane}>
+          <ScrollView
+            style={styles.storyPane}
+            ref={scrollViewRef}
+            onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+          >
             <Text style={styles.storyText}>{gameState.story}</Text>
             {loading && <Text style={styles.loadingText}>Thinking...</Text>}
           </ScrollView>
@@ -117,7 +131,7 @@ export default function HomeScreen() {
                 }
               }}
             >
-              <Text style={styles.buttonText}>{debug ? 'Debug' : 'Camp'}</Text>
+              <Text style={styles.buttonText}>{debug ? '🐞 Debug' : '🔥 Camp'}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>
               <Text style={styles.buttonText}>🔮 Abilities</Text>
@@ -238,5 +252,29 @@ const styles = StyleSheet.create({
   sendButtonText: {
     color: '#fff',
     fontSize: 14,
+  },
+  inventoryPanel: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#fff8e1',
+    borderTopWidth: 4,
+    borderTopColor: '#4b2e05',
+    padding: 10,
+  },
+  inventoryTitle: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  inventoryItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 5,
+    backgroundColor: '#e6ddc9',
+    borderWidth: 2,
+    borderColor: '#4b2e05',
+    borderRadius: 4,
+    marginBottom: 5,
   },
 });
