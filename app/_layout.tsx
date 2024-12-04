@@ -1,19 +1,25 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Slot } from 'expo-router';
+import { StyleSheet } from 'react-native';
 import { GameProvider } from '../src/GameContext';
-import { Stack } from 'expo-router';
 import { DebugProvider } from '../src/DebugContext';
+import SplashScreen from './SplashScreen';
+import HomeScreen from './home';
+import DebugScreen from './DebugScreen';
 
-export default function Layout() {
+const Stack = createNativeStackNavigator();
+
+export default function AppLayout() {
   return (
     <GameProvider>
       <DebugProvider>
         <SafeAreaView style={styles.safeArea}>
-          <Stack screenOptions={{ headerShown: false }}>
-            <Slot /> {/* Renders the current screen */}
-          </Stack>
+          <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Splash" component={SplashScreen} />
+            <Stack.Screen name="home" component={HomeScreen} />
+            <Stack.Screen name="DebugScreen" component={DebugScreen} />
+          </Stack.Navigator>
         </SafeAreaView>
       </DebugProvider>
     </GameProvider>
@@ -23,11 +29,6 @@ export default function Layout() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#c2a772', // Match the stats bar background
-  },
-  container: {
-    flex: 1,
-    backgroundColor: '#fef9e7', // Main app background
-    padding: 10, // Move padding inside the container style
+    backgroundColor: '#c2a772',
   },
 });
