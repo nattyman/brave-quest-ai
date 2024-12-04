@@ -10,6 +10,7 @@ type GameState = {
   };
   inventory: string[];
   story: string;
+  initialQuestionAnswered: boolean; // Add this property
 };
 
 type GameContextType = {
@@ -24,7 +25,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [gameState, setGameState] = useState<GameState>({
     playerStats: { health: 100, gold: 50, food: 30, wood: 20 },
     inventory: ['Sword', 'Shield'],
-    story: 'Welcome, brave adventurer!',
+    story: 'Welcome, brave adventurer! What is your name?',
+    initialQuestionAnswered: false, // Initialize it to false
   });
 
   const updateGameState = (changes: Partial<GameState>) => {
@@ -37,6 +39,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       },
       inventory: changes.inventory || prevState.inventory,
       story: changes.story || prevState.story,
+      initialQuestionAnswered: changes.initialQuestionAnswered ?? prevState.initialQuestionAnswered,
     }));
   };
 
