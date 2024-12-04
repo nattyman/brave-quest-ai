@@ -26,6 +26,10 @@ export default function HomeScreen() {
 
   async function handleInput(command: string) {
     setLoading(true);
+    const playerResponse = `Player: ${command}`;
+    updateGameState({
+      story: `${gameState.story}\n\n${playerResponse}`,
+    });
 
     const initialPrompt = gameState.initialQuestionAnswered
       ? ''
@@ -69,13 +73,13 @@ export default function HomeScreen() {
           wood: gameState.playerStats.wood + (changes.playerStats.wood || 0),
         },
         inventory: [...gameState.inventory, ...(changes.inventory || [])],
-        story: `${gameState.story}\n\n${changes.story}`,
+        story: `${gameState.story}\n\n${playerResponse}\n\n${changes.story}`,
         initialQuestionAnswered: true, // Set to true after the first response
       });
     } catch (error) {
-      console.error('Failed to parse AI response:', error);
+      console.error('Failed to parse AI response:', aiResponse, error);
       updateGameState({
-        story: `${gameState.story}\n\n"Sorry, what's that? Mumbling won't get you anywhere." -The game master is very old, hard of hearing, and grumpy. Please try again.`,
+        story: `${gameState.story}\n\n${playerResponse}\n\n"Sorry, what's that? Mumbling won't get you anywhere." -The game master is very old, hard of hearing, and grumpy. Please try again.`,
       });
     }
 
