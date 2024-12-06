@@ -54,10 +54,11 @@ export default function HomeScreen() {
 
       Instructions: Respond with changes to the game state in this format:
       {
-        "playerStats": { "health": -10, "gold": 20 }, // only + or - responses, 0 for no change
-        "inventory": ["Potion"],
+        "playerStats": { "health": -x, "gold": +x, "food": 0 }, // only + or - responses, 0 for no change
+        "inventory": ["Potion", "Sword of fire", "Guantlets of power"], // add or remove items
         "story": "You took damage but found a potion."
       }
+        // These are just examples, be creative!
     `;
 
     const aiResponse = await getAIResponse(prompt, addMessage);
@@ -137,8 +138,14 @@ export default function HomeScreen() {
             >
               <Text style={styles.buttonText}>{debug ? '🐞 Debug' : '🔥 Camp'}</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.buttonText}>🔮 Abilities</Text>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => {
+                router.push('/MenuScreen');
+                console.log('MenuScreen pushed');
+              }}
+            >
+              <Text style={styles.buttonText}>📋 Menu</Text>
             </TouchableOpacity>
           </View>
 
