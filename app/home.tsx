@@ -73,7 +73,7 @@ export default function HomeScreen() {
           food: gameState.playerStats.food + (changes.playerStats.food || 0),
           wood: gameState.playerStats.wood + (changes.playerStats.wood || 0),
         },
-        inventory: [...gameState.inventory, ...(changes.inventory || [])],
+        inventory: changes.inventory || [],
         story: `${gameState.story}\n\n${playerResponse}\n\n${changes.story}`,
         initialQuestionAnswered: true, // Set to true after the first response
       });
