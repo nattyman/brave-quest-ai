@@ -7,6 +7,7 @@ import { DebugProvider } from '../src/DebugContext';
 import SplashScreen from './SplashScreen';
 import HomeScreen from './home';
 import DebugScreen from './DebugScreen';
+import MenuScreen from './MenuScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ export default function AppLayout() {
           <Stack.Navigator initialRouteName="Splash" screenOptions={{ headerShown: false }}>
             <Stack.Screen name="Splash" component={SplashScreen} />
             <Stack.Screen name="home" component={HomeScreen} />
+            <Stack.Screen name="MenuScreen" component={MenuScreen} />
             <Stack.Screen name="DebugScreen" component={DebugScreen} />
           </Stack.Navigator>
         </SafeAreaView>

@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   backButton: {
     marginBottom: 10,
     padding: 10,
-    backgroundColor: '#ccc',
+    backgroundColor: '#b28772',
     borderRadius: 5,
   },
   backButtonText: {
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
   copyButton: {
     marginBottom: 10,
     padding: 10,
-    backgroundColor: '#007bff',
+    backgroundColor: '#b28772',
     borderRadius: 5,
   },
   copyButtonText: {

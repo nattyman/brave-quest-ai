@@ -17,7 +17,7 @@ export async function getAIResponse(
 ): Promise<string> {
   try {
     // Store the user's prompt
-    addMessage(`User: ${prompt}`);
+    addMessage(`System: ${prompt}`);
 
     const response = await client.chat.completions.create({
       messages: [
