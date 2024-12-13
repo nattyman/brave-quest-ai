@@ -4,7 +4,6 @@ import { useNavigation } from '@react-navigation/native';
 import { useGame } from '../src/GameContext';
 import { router } from 'expo-router';
 
-
 export default function MenuScreen() {
   const navigation = useNavigation();
   const { updateGameState } = useGame();
@@ -13,11 +12,16 @@ export default function MenuScreen() {
     // Reset the game state to its initial state
     updateGameState({
       playerStats: { health: 100, gold: 50, food: 30, wood: 20 },
-      inventory: ['Sword', 'Shield'],
+      inventory: [
+        { id: '1', name: 'Sword', quantity: 1 },
+        { id: '2', name: 'Shield', quantity: 1 },
+      ],
+      equippedItems: [null, null], // Reset equippedItems
       story: 'Welcome, brave adventurer! The journey ahead is perilous. What is your name?',
+      initialQuestionAnswered: false,
     });
     // navigation.navigate('home'); // Navigate back to the game
-    router.push('/home')
+    router.push('/home');
   };
 
   return (

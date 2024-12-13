@@ -23,7 +23,44 @@ export default function HomeScreen() {
   const router = useRouter();
   const { debug, addMessage, setDebug } = useDebug(); // Get setDebug from useDebug
   const scrollViewRef = useRef<ScrollView>(null); // Add a ref for the ScrollView
+  const [inventoryVisible, setInventoryVisible] = useState(false); // Add state for inventory visibility
 
+  // Handle equipping an item
+  const handleEquip = (itemId: string) => {
+    const item = gameState.inventory.find(i => i.id === itemId);
+    if (!item) return;
+
+    // Check if the item is already equipped
+    const isAlreadyEquipped = gameState.equippedItems.some(equippedItem => equippedItem?.id === itemId);
+    if (isAlreadyEquipped) {
+      // Unequip the item
+      const newEquippedItems = gameState.equippedItems.map(equippedItem =>
+        equippedItem?.id === itemId ? null : equippedItem
+      );
+      updateGameState({ equippedItems: newEquippedItems });
+      return;
+    }
+
+    // Find the first available slot
+    const slotIndex = gameState.equippedItems.findIndex(equippedItem => !equippedItem);
+    if (slotIndex === -1) {
+      alert('No available slots to equip this item.');
+      return;
+    }
+
+    // Equip the item
+    const newEquippedItems = [...gameState.equippedItems];
+    newEquippedItems[slotIndex] = item;
+
+    updateGameState({ equippedItems: newEquippedItems });
+  };
+
+  // Handle using an item
+  const handleUse = (itemId: string) => {
+    // Implement use logic here
+  };
+
+  // Handle input from the player
   async function handleInput(command: string) {
     setLoading(true);
     const playerResponse = `Player: ${command}`;
@@ -45,18 +82,23 @@ export default function HomeScreen() {
       - Wood: ${gameState.playerStats.wood}
 
       Inventory:
-      ${gameState.inventory.join(', ')}
+      ${gameState.inventory.map(item => `${item.name} (${item.quantity})`).join(', ')}
+
+      Equipped Items:
+      ${gameState.equippedItems.map(item => item ? item.name : 'None').join(', ')}
 
       Story So Far:
       ${gameState.story}
 
-      Player's Command: ${command}
+      // Use of unequipped items is slower and may be less effective, like drawing sword in combat or blocking a blow with shield.
+      Player's Command: ${command} 
 
       Instructions: Respond with changes to the game state in this format:
       {
-        "playerStats": { "health": -x, "gold": +x, "food": 0 }, // only + or - responses, 0 for no change
-        "inventory": ["Potion", "Sword of fire", "Guantlets of power"], // add or remove items
-        "story": "You took damage but found a potion."
+        "playerStats": { "health": -x, "gold": +x, "food": 0 }, // x = a number, only + or - responses, 0 for no change
+        "inventory": { "add": ["Health Potion", "Sword of fire"], "remove": ["Old Sword"] }, // specify items to add or remove
+        "equippedItems": ["Sword of fire", null], // specify equipped items, null for empty slots. Only 2 slots available
+        "story": "You took damage but found a health potion."
       }
         // These are just examples, be creative!
     `;
@@ -65,6 +107,8 @@ export default function HomeScreen() {
 
     try {
       const changes = JSON.parse(aiResponse);
+      const newEquippedItems = changes.equippedItems?.map(name => gameState.inventory.find(item => item.name === name) || null) ?? gameState.equippedItems;
+
       updateGameState({
         playerStats: {
           ...gameState.playerStats,
@@ -73,7 +117,11 @@ export default function HomeScreen() {
           food: gameState.playerStats.food + (changes.playerStats.food || 0),
           wood: gameState.playerStats.wood + (changes.playerStats.wood || 0),
         },
-        inventory: changes.inventory || [],
+        inventory: changes.inventory ? [
+          ...gameState.inventory.filter(item => !changes.inventory.remove?.includes(item.name)),
+          ...changes.inventory.add?.map((name: string) => ({ id: `${Date.now()}`, name, quantity: 1 })) || []
+        ] : gameState.inventory,
+        equippedItems: newEquippedItems, // Ensure equippedItems is always defined
         story: `${gameState.story}\n\n${playerResponse}\n\n${changes.story}`,
         initialQuestionAnswered: true, // Set to true after the first response
       });
@@ -104,7 +152,7 @@ export default function HomeScreen() {
               <Text style={styles.stat}>❤️ {gameState.playerStats.health}</Text>
               <Text style={styles.stat}>💰 {gameState.playerStats.gold}</Text>
               <Text style={styles.stat}>🍗 {gameState.playerStats.food}</Text>
-              <Text style={styles.stat}>🌲 {gameState.playerStats.wood}</Text>
+              <Text style={styles.stat}>���� {gameState.playerStats.wood}</Text>
             </View>
           </TouchableOpacity>
 
@@ -120,11 +168,14 @@ export default function HomeScreen() {
 
           {/* Action Buttons */}
           <View style={styles.actionButtons}>
-            <TouchableOpacity style={styles.actionButton}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={() => setInventoryVisible(!inventoryVisible)} // Toggle inventory visibility
+            >
               <Text style={styles.buttonText}>📦 Inventory</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.buttonText}>🗺 Map</Text>
+              <Text style={styles.buttonText}>�� Map</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.actionButton}
@@ -169,6 +220,47 @@ export default function HomeScreen() {
               <Text style={styles.sendButtonText}>Send</Text>
             </TouchableOpacity>
           </View>
+
+          {/* Inventory Panel */}
+          {inventoryVisible && (
+            <View style={styles.inventoryPanel}>
+              <View style={styles.inventoryHeader}>
+                <Text style={styles.inventoryTitle}>Inventory</Text>
+                <TouchableOpacity onPress={() => setInventoryVisible(false)}>
+                  <Text style={styles.closeButton}>Close</Text>
+                </TouchableOpacity>
+              </View>
+              {gameState.inventory.map((item, index) => {
+                const isEquipped = gameState.equippedItems.some(equippedItem => equippedItem?.id === item.id);
+                return (
+                  <View
+                    key={index}
+                    style={[
+                      styles.inventoryItem,
+                      isEquipped && styles.equippedItem,
+                    ]}
+                  >
+                    <Text style={styles.itemName}>{item.name} {isEquipped && '✔️'}</Text>
+                    <Text style={styles.itemQuantity}>({item.quantity})</Text>
+                    <View style={styles.inventoryActions}>
+                      <TouchableOpacity
+                        style={styles.inventoryButton}
+                        onPress={() => handleUse(item.id)}
+                      >
+                        <Text>Use</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={styles.inventoryButton}
+                        onPress={() => handleEquip(item.id)}
+                      >
+                        <Text>{isEquipped ? 'Stow' : 'Equip'}</Text>
+                      </TouchableOpacity>
+                    </View>
+                  </View>
+                );
+              })}
+            </View>
+          )}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -274,9 +366,18 @@ const styles = StyleSheet.create({
     borderTopColor: '#4b2e05',
     padding: 10,
   },
+  inventoryHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   inventoryTitle: {
     fontSize: 18,
     marginBottom: 10,
+  },
+  closeButton: {
+    fontSize: 16,
+    color: 'red',
   },
   inventoryItem: {
     flexDirection: 'row',
@@ -288,4 +389,26 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     marginBottom: 5,
   },
+  equippedItem: {
+    backgroundColor: '#d4e157', // Highlight color for equipped items
+  },
+  itemQuantity: {
+    marginRight: 10,
+  },
+  itemName: {
+    flex: 1,
+    textAlign: 'left',
+  },
+  inventoryActions: {
+    flexDirection: 'row',
+  },
+  inventoryButton: {
+    marginLeft: 5,
+    padding: 5,
+    backgroundColor: '#f8f4ec',
+    borderWidth: 1,
+    borderColor: '#4b2e05',
+    borderRadius: 4,
+  },
 });
+
