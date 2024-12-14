@@ -15,6 +15,7 @@ import { getAIResponse } from '../utils/ai'; // Import the AI function
 import { useGame } from '../src/GameContext'; // Import your context
 import { useRouter } from 'expo-router';
 import { useDebug } from '../src/DebugContext';
+import questData from '../story/quest1-milestone1.json'; // Import the quest data
 
 export default function HomeScreen() {
   const { gameState, updateGameState } = useGame();
@@ -24,6 +25,7 @@ export default function HomeScreen() {
   const { debug, addMessage, setDebug } = useDebug(); // Get setDebug from useDebug
   const scrollViewRef = useRef<ScrollView>(null); // Add a ref for the ScrollView
   const [inventoryVisible, setInventoryVisible] = useState(false); // Add state for inventory visibility
+  const [initialQuestionAnswered, setInitialQuestionAnswered] = useState(false); // Add state for initial question
 
   // Handle equipping an item
   const handleEquip = (itemId: string) => {
@@ -68,14 +70,27 @@ export default function HomeScreen() {
       story: `${gameState.story}\n\n${playerResponse}`,
     });
 
-    const initialPrompt = gameState.initialQuestionAnswered
-      ? ''
-      : 'Welcome, brave adventurer! What is your name?\n';
+    if (!initialQuestionAnswered) {
+      // Store the player's name and update the game state
+      updateGameState({
+        playerStats: { ...gameState.playerStats, name: command },
+        story: `${gameState.story}\n\nHello, ${command}, you find yourself entering the small village of Wyrdwell. You have heard many strange tales and rumors about Wyrdwell and you wanted to see if they were true. What would you like to do first?`,
+      });
+      setInitialQuestionAnswered(true);
+      setLoading(false);
+      return;
+    }
 
     const prompt = `
-      ${initialPrompt}
-      Game State:
+    Quest Information:
+    ${JSON.stringify(questData)}  
+
+    Story So Far:
+    ${gameState.story}    
+    
+    Game State:
       Player Stats:
+      - Name: ${gameState.playerStats.name}
       - Health: ${gameState.playerStats.health}
       - Gold: ${gameState.playerStats.gold}
       - Food: ${gameState.playerStats.food}
@@ -87,20 +102,17 @@ export default function HomeScreen() {
       Equipped Items:
       ${gameState.equippedItems.map(item => item ? item.name : 'None').join(', ')}
 
-      Story So Far:
-      ${gameState.story}
+    Player's Command: ${command}
 
-      // Use of unequipped items is slower and may be less effective, like drawing sword in combat or blocking a blow with shield.
-      Player's Command: ${command} 
-
-      Instructions: Respond with changes to the game state in this format:
+    Response Instructions: Respond with changes to the game state in this JSON Object format:
       {
         "playerStats": { "health": -x, "gold": +x, "food": 0 }, // x = a number, only + or - responses, 0 for no change
         "inventory": { "add": ["Health Potion", "Sword of fire"], "remove": ["Old Sword"] }, // specify items to add or remove
         "equippedItems": ["Sword of fire", null], // specify equipped items, null for empty slots. Only 2 slots available
         "story": "You took damage but found a health potion."
       }
-        // These are just examples, be creative!
+      Response instruction data are just examples, be creative!
+      Provide the updated game state as a plain JSON object without any formatting characters like \`\`\`
     `;
 
     const aiResponse = await getAIResponse(prompt, addMessage);
@@ -152,7 +164,7 @@ export default function HomeScreen() {
               <Text style={styles.stat}>❤️ {gameState.playerStats.health}</Text>
               <Text style={styles.stat}>💰 {gameState.playerStats.gold}</Text>
               <Text style={styles.stat}>🍗 {gameState.playerStats.food}</Text>
-              <Text style={styles.stat}>���� {gameState.playerStats.wood}</Text>
+              <Text style={styles.stat}>🌲 {gameState.playerStats.wood}</Text>
             </View>
           </TouchableOpacity>
 
@@ -175,7 +187,7 @@ export default function HomeScreen() {
               <Text style={styles.buttonText}>📦 Inventory</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.buttonText}>�� Map</Text>
+              <Text style={styles.buttonText}>🗺 Map</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.actionButton}

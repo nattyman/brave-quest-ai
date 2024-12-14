@@ -1,0 +1,76 @@
+{
+  "quest": {
+    "title": "The Whispering Woods",
+    "description": "Strange whispers haunt the edges of Wyrdwell, luring villagers into the woods, where they vanish without a trace. The player must uncover the mystery and stop the source of the whispers.",
+    "end_goal": "Destroy or control the artifact generating the whispers and rescue any surviving villagers.",
+    "milestone_1": {
+      "title": "The Vanishing",
+      "goal": "Investigate the disappearances and find the source of the whispers.",
+      "tasks": [
+        {
+          "task_name": "Speak to NPCs in Wyrdwell",
+          "objective": "Gather clues about the missing villagers by interacting with key NPCs.",
+          "npc_dialogues": [
+            {
+              "name": "Elara, the Herbalist",
+              "dialogues": {
+                "initial": "Bring me the Moonshade Fern. It grows at the edge of the forest, where the whispers are loudest.",
+                "success": "Good, you’re braver than most. The whispers are not natural—they’re tied to an old magic, the kind that corrupts and devours. The Fern grows where the artifact’s magic bleeds into the land. Be careful—the deeper you go, the more dangerous it becomes."
+              },
+              "info": "Knows the whispers are linked to an ancient artifact and helps locate magical disturbances."
+            },
+            {
+              "name": "Thorne, the Hunter",
+              "dialogues": {
+                "initial": "Tracks lead to the stone circle. You’ll find more there—if you’ve the stomach for it. But don’t say I didn’t warn you.",
+                "followup": "It’s the artifact. I’ve seen its effects before. It twists creatures into monsters. Don’t let it twist you."
+              },
+              "info": "Saw tracks leading to the stone circle and provides practical knowledge of the dangers."
+            }
+          ]
+        },
+        {
+          "task_name": "Search the Village Outskirts",
+          "objective": "Investigate the area where the villagers were last seen.",
+          "clues": [
+            "Scattered belongings, such as a scarf caught on a branch and a partially buried journal.",
+            "Tracks and claw marks suggesting villagers were dragged into the woods.",
+            "The stone circle, marked with faintly glowing runes."
+          ]
+        },
+        {
+          "task_name": "Discover a Fragment of the Whispering Artifact",
+          "objective": "Find and investigate the shard while resisting its effects.",
+          "shard_description": "A small, glowing piece of the artifact, faintly pulsing with power and whispering incoherent words.",
+          "npc_reactions": {
+            "Elara": "This shard... it’s part of something larger. Something that shouldn’t exist. If there are more pieces, they must be destroyed before the whispers consume us all.",
+            "Thorne": "I told you not to meddle with this. That thing is a beacon for trouble. Mark my words—whatever you’re chasing, it’s not worth it."
+          }
+        }
+      ],
+      "encounters": [
+        {
+          "type": "Environmental",
+          "challenges": [
+            "Twisted roots that require a dexterity check to avoid tripping.",
+            "Fog of whispers that disorients the player and requires perception checks."
+          ]
+        },
+        {
+          "type": "Combat",
+          "details": {
+            "description": "A pack of corrupted wolves emerges, driven mad by the artifact’s influence.",
+            "alpha_wolf": {
+              "abilities": "Glowing eyes, emits low whispers, and has heightened aggression."
+            },
+            "reward": "Wolf Fang Charm, a minor resilience boost against fear effects."
+          }
+        }
+      ],
+      "achievement": {
+        "description": "Unlock the hidden path into the forest.",
+        "effect": "The shard begins to glow brightly, revealing a faint, glowing path leading deeper into the woods."
+      }
+    }
+  }
+}
