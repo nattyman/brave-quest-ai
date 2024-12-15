@@ -1,0 +1,93 @@
+{
+    "skillsBasic": [
+      {
+        "id": "strong_attack",
+        "name": "Strong Attack",
+        "type": "active",
+        "requirements": {
+          "level": 2,
+          "equipment": ["weapon"]
+        }
+      },
+      {
+        "id": "shield_block",
+        "name": "Shield Block",
+        "type": "active",
+        "requirements": {
+          "level": 3,
+          "equipment": ["shield"]
+        }
+      },
+      {
+        "id": "fireball",
+        "name": "Fireball",
+        "type": "active",
+        "requirements": {
+          "level": 4,
+          "equipment": ["magic"]
+        }
+      },
+      {
+        "id": "healing_touch",
+        "name": "Healing Touch",
+        "type": "active",
+        "requirements": {
+          "level": 5,
+          "equipment": ["magic"]
+        }
+      },
+      {
+        "id": "regeneration",
+        "name": "Regeneration",
+        "type": "passive",
+        "requirements": {
+          "level": 3
+        }
+      },
+      {
+        "id": "power_strike",
+        "name": "Power Strike",
+        "type": "active",
+        "requirements": {
+          "level": 6,
+          "equipment": ["weapon"]
+        }
+      },
+      {
+        "id": "magic_shield",
+        "name": "Magic Shield",
+        "type": "active",
+        "requirements": {
+          "level": 5,
+          "equipment": ["magic"]
+        }
+      },
+      {
+        "id": "berserk_rage",
+        "name": "Berserk Rage",
+        "type": "active",
+        "requirements": {
+          "level": 6,
+          "equipment": ["weapon"]
+        }
+      },
+      {
+        "id": "quick_heal",
+        "name": "Quick Heal",
+        "type": "active",
+        "requirements": {
+          "level": 2
+        }
+      },
+      {
+        "id": "arcane_blast",
+        "name": "Arcane Blast",
+        "type": "active",
+        "requirements": {
+          "level": 7,
+          "equipment": ["magic"]
+        }
+      }
+    ]
+  }
+  

@@ -1,7 +1,7 @@
 import React, { useState, createContext, useContext } from 'react';
 
 // Define the shape of the game state
-type GameState = {
+export type GameState = { // Export the GameState type
   playerStats: {
     name: string;
     health: number;
