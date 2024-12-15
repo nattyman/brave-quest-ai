@@ -91,10 +91,15 @@ export default function HomeScreen() {
     Game State:
       Player Stats:
       - Name: ${gameState.playerStats.name}
-      - Health: ${gameState.playerStats.health}
+      - Health: ${gameState.playerStats.health}/${gameState.playerStats.maxHealth}
+      - Stamina: ${gameState.playerStats.stamina}/${gameState.playerStats.maxStamina}
+      - Magic: ${gameState.playerStats.magic}/${gameState.playerStats.maxMagic}
+      - Attack: ${gameState.playerStats.attack}
+      - Defense: ${gameState.playerStats.defense}
+      - XP: ${gameState.playerStats.xp}
+      - Level: ${gameState.playerStats.level}
+      - Skills: ${gameState.playerStats.skills.join(', ')}
       - Gold: ${gameState.playerStats.gold}
-      - Food: ${gameState.playerStats.food}
-      - Wood: ${gameState.playerStats.wood}
 
       Inventory:
       ${gameState.inventory.map(item => `${item.name} (${item.quantity})`).join(', ')}
@@ -106,9 +111,9 @@ export default function HomeScreen() {
 
     Response Instructions: Respond with changes to the game state in this JSON Object format:
       {
-        "playerStats": { "health": -x, "gold": +x, "food": 0 }, // x = a number, to add health or resources return a number, to subtract return a negative number. 0 for no change
-        "inventory": { "add": ["Health Potion", "Sword of fire"], "remove": ["Old Sword"] }, // specify items to add or remove
-        "equippedItems": ["Sword of fire", null], // specify equipped items, null for empty slots. Only 2 slots available
+        "playerStats": { "health": -x, "maxHealth": +x, "stamina": -x, "maxStamina": +x, "magic": -x, "maxMagic": +x, "attack": +x, "defense": +x, "xp": +x, "level": +x, "skills": ["new skill"], "gold": +x }, //Only send changes to stats and maxStats, 0 if no change
+        "inventory": { "add": ["Health Potion", "Sword of fire"], "remove": ["Old Sword"] },
+        "equippedItems": ["Sword of fire", null],
         "story": "You took damage but found a health potion."
       }
       Response instruction data are just examples, be creative!
@@ -124,15 +129,14 @@ export default function HomeScreen() {
 
     try {
       const changes = JSON.parse(aiResponse);
-      const newEquippedItems = changes.equippedItems?.map(name => gameState.inventory.find(item => item.name === name) || null) ?? gameState.equippedItems;
+      const newEquippedItems = changes.equippedItems?.map((name: string) => gameState.inventory.find(item => item.name === name) || null) ?? gameState.equippedItems;
 
       updateGameState({
         playerStats: {
           ...gameState.playerStats,
           health: Math.max(gameState.playerStats.health + (changes.playerStats.health || 0), 0),
           gold: gameState.playerStats.gold + (changes.playerStats.gold || 0),
-          food: gameState.playerStats.food + (changes.playerStats.food || 0),
-          wood: gameState.playerStats.wood + (changes.playerStats.wood || 0),
+          xp: gameState.playerStats.xp + (changes.playerStats.xp || 0),
         },
         inventory: changes.inventory ? [
           ...gameState.inventory.filter(item => !changes.inventory.remove?.includes(item.name)),
@@ -140,7 +144,7 @@ export default function HomeScreen() {
         ] : gameState.inventory,
         equippedItems: newEquippedItems, // Ensure equippedItems is always defined
         story: `${gameState.story}\n\n${playerResponse}\n\n${changes.story}`,
-        initialQuestionAnswered: true, // Set to true after the first response
+        initialQuestionAnswered: true, // Set to true after the first response where player gives their name
       });
     } catch (error) {
       console.error('Failed to parse AI response:', aiResponse, error);
@@ -166,10 +170,18 @@ export default function HomeScreen() {
             onLongPress={() => setDebug(!debug)}
           >
             <View style={styles.statsBar}>
-              <Text style={styles.stat}>❤️ {gameState.playerStats.health}</Text>
-              <Text style={styles.stat}>💰 {gameState.playerStats.gold}</Text>
-              <Text style={styles.stat}>🍗 {gameState.playerStats.food}</Text>
-              <Text style={styles.stat}>🌲 {gameState.playerStats.wood}</Text>
+              <View style={styles.statsRow}>
+                <Text style={styles.stat}>❤️ {gameState.playerStats.health}/{gameState.playerStats.maxHealth}</Text>
+                <Text style={styles.stat}>⚡ {gameState.playerStats.stamina}/{gameState.playerStats.maxStamina}</Text>
+                <Text style={styles.stat}>✨ {gameState.playerStats.magic}/{gameState.playerStats.maxMagic}</Text>
+                <Text style={styles.stat}>💰 {gameState.playerStats.gold}</Text>
+              </View>
+              <View style={styles.statsRow}>
+                <Text style={styles.stat}>⚔️ {gameState.playerStats.attack}</Text>
+                <Text style={styles.stat}>🛡️ {gameState.playerStats.defense}</Text>
+                <Text style={styles.stat}>⭐ XP: {gameState.playerStats.xp}</Text>
+                <Text style={styles.stat}>🏅 Level: {gameState.playerStats.level}</Text>
+              </View>
             </View>
           </TouchableOpacity>
 
@@ -290,26 +302,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#fef9e7',
   },
   statsBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     backgroundColor: '#c2a772',
     padding: 10,
     borderBottomWidth: 2,
     borderBottomColor: '#4b2e05',
   },
-  statsLeft: { flexDirection: 'row' },
-  stat: {
-    marginHorizontal: 5,
-    fontSize: 12,
-  },
-  statsRight: {
+  statsRow: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    flexWrap: 'wrap', // Ensure wrapping if text overflows
+    justifyContent: 'space-between',
+    marginBottom: 5,
   },
-  equipped: {
-    marginHorizontal: 5,
-    fontSize: 12, 
+  stat: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 12,
   },
   storyPane: {
     flex: 1,
