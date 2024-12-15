@@ -106,7 +106,7 @@ export default function HomeScreen() {
 
     Response Instructions: Respond with changes to the game state in this JSON Object format:
       {
-        "playerStats": { "health": -x, "gold": +x, "food": 0 }, // x = a number, only + or - responses, 0 for no change
+        "playerStats": { "health": -x, "gold": +x, "food": 0 }, // x = a number, to add health or resources return a number, to subtract return a negative number. 0 for no change
         "inventory": { "add": ["Health Potion", "Sword of fire"], "remove": ["Old Sword"] }, // specify items to add or remove
         "equippedItems": ["Sword of fire", null], // specify equipped items, null for empty slots. Only 2 slots available
         "story": "You took damage but found a health potion."
