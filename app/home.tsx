@@ -65,7 +65,7 @@ export default function HomeScreen() {
   // Handle input from the player
   async function handleInput(command: string) {
     setLoading(true);
-    const playerResponse = `Player: ${command}`;
+    const playerResponse = `Player: ${command}`;// Could replace Player with the player's name
     updateGameState({
       story: `${gameState.story}\n\n${playerResponse}`,
     });

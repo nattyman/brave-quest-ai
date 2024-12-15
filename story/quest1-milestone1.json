@@ -14,54 +14,93 @@
             {
               "name": "Elara, the Herbalist",
               "dialogues": {
+                "personality": "Gumpy, difficult, but knowledgeable about the forest and its dangers.",
                 "initial": "Bring me the Moonshade Fern. It grows at the edge of the forest, where the whispers are loudest.",
-                "success": "Good, you’re braver than most. The whispers are not natural—they’re tied to an old magic, the kind that corrupts and devours. The Fern grows where the artifact’s magic bleeds into the land. Be careful—the deeper you go, the more dangerous it becomes."
-              },
-              "info": "Knows the whispers are linked to an ancient artifact and helps locate magical disturbances."
+                "success": "Good, you’re braver than most. The whispers are not natural—they're tied to an old magic, the kind that corrupts and devours. The Fern grows where the artifact’s magic bleeds into the land. Be careful—the deeper you go, the more dangerous it becomes.",
+                "info": "The fern feeds on the same magic that empowers the artifact. It can be used to brew potions that shield against the whispers' effects."
+              }
             },
             {
               "name": "Thorne, the Hunter",
               "dialogues": {
-                "initial": "Tracks lead to the stone circle. You’ll find more there—if you’ve the stomach for it. But don’t say I didn’t warn you.",
+                "personality": "Gruff, no-nonsense, but protective of the village and its people.",
+                "initial": "Tracks lead to the stone circle. You’ll find more there—if you’ve the stomach for it.",
                 "followup": "It’s the artifact. I’ve seen its effects before. It twists creatures into monsters. Don’t let it twist you."
               },
-              "info": "Saw tracks leading to the stone circle and provides practical knowledge of the dangers."
+              "info": "Knows about the tracks leading to the stone circle and hints at corrupted creatures in the forest."
             }
           ]
         },
         {
-          "task_name": "Search the Village Outskirts",
-          "objective": "Investigate the area where the villagers were last seen.",
-          "clues": [
-            "Scattered belongings, such as a scarf caught on a branch and a partially buried journal.",
-            "Tracks and claw marks suggesting villagers were dragged into the woods.",
-            "The stone circle, marked with faintly glowing runes."
-          ]
+          "task_name": "Retrieve the Moonshade Fern",
+          "objective": "Venture into the Whispering Woods to retrieve the Moonshade Fern while overcoming challenges.",
+          "obstacles": [
+            {
+              "type": "Combat",
+              "description": "A pair of corrupted wolves guard the Moonshade Fern.",
+              "mechanics": {
+                "success": "The player defeats or sneaks past the wolves.",
+                "failure": "The wolves attack, inflicting damage and lowering focus temporarily."
+              },
+              "reward": "The player obtains the Moonshade Fern. Elara can use it to brew a protective potion."
+            },
+            {
+              "type": "Magical Trap",
+              "description": "The fern triggers a magical pulse, intensifying the whispers.",
+              "mechanics": {
+                "check": "Willpower",
+                "success": "The player resists the whispers' disorienting effects.",
+                "failure": "The player experiences visions and takes a temporary debuff (-1 focus)."
+              }
+            }
+          ],
+          "outcome": "The player retrieves the Moonshade Fern and senses the artifact's power growing stronger."
         },
         {
           "task_name": "Discover a Fragment of the Whispering Artifact",
-          "objective": "Find and investigate the shard while resisting its effects.",
-          "shard_description": "A small, glowing piece of the artifact, faintly pulsing with power and whispering incoherent words.",
-          "npc_reactions": {
-            "Elara": "This shard... it’s part of something larger. Something that shouldn’t exist. If there are more pieces, they must be destroyed before the whispers consume us all.",
-            "Thorne": "I told you not to meddle with this. That thing is a beacon for trouble. Mark my words—whatever you’re chasing, it’s not worth it."
-          }
+          "objective": "Investigate the stone circle and uncover a shard of the artifact.",
+          "details": {
+            "description": "The stone circle emits an overwhelming magical presence. It promises power and asks player if they want it. The whispers grow louder as the player pries a shard from the ground.",
+            "player_challenge": {
+              "check": "Willpower",
+              "success": "The player resists the shard's influence.",
+              "failure": "The player accespts offer of power and is briefly overwhelmed, experiencing visions of fear or temptation. -25 health"
+            },
+            "npc_reactions": {
+              "Elara": "This shard... it’s part of something larger. Something that shouldn’t exist. If there are more pieces, they must be destroyed before the whispers consume us all.",
+              "Thorne": "I told you not to meddle with this. That thing is a beacon for trouble. Mark my words—whatever you’re chasing, it’s not worth it."
+            }
+          },
+          "reward": "The player gains a Quest Item: Fragment of the Whispering Artifact.",
+          "achievement": "The shard glows faintly, revealing a hidden path deeper into the forest."
         }
       ],
       "encounters": [
         {
           "type": "Environmental",
           "challenges": [
-            "Twisted roots that require a dexterity check to avoid tripping.",
-            "Fog of whispers that disorients the player and requires perception checks."
+            {
+              "description": "Twisted roots threaten to trip the player.",
+              "mechanics": {
+                "check": "Dexterity",
+                "failure": "The player trips, taking minor damage. -3 Health."
+              }
+            },
+            {
+              "description": "Fog of whispers disorients the player.",
+              "mechanics": {
+                "check": "Perception",
+                "failure": "The player becomes temporarily lost, costing time or resources. -5 Health for each turn lost"
+              }
+            }
           ]
         },
         {
           "type": "Combat",
-          "details": {
-            "description": "A pack of corrupted wolves emerges, driven mad by the artifact’s influence.",
-            "alpha_wolf": {
-              "abilities": "Glowing eyes, emits low whispers, and has heightened aggression."
+          "description": "Corrupted Forest Wolves ambush the player, driven mad by the artifact's influence.",
+          "mechanics": {
+            "abilities": {
+              "alpha_wolf": "Has glowing eyes and emits whispers, inflicting Fear on failed Willpower checks."
             },
             "reward": "Wolf Fang Charm, a minor resilience boost against fear effects."
           }
@@ -69,7 +108,7 @@
       ],
       "achievement": {
         "description": "Unlock the hidden path into the forest.",
-        "effect": "The shard begins to glow brightly, revealing a faint, glowing path leading deeper into the woods."
+        "effect": "The artifact shard glows brightly, revealing the way forward."
       }
     }
   }
