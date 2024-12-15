@@ -5,6 +5,7 @@ type DebugContextType = {
   setDebug: (value: boolean) => void;
   messages: string[];
   addMessage: (message: string) => void;
+  addDebugMessage: (label: string, message: string) => void;
 };
 
 const DebugContext = createContext<DebugContextType | undefined>(undefined);
@@ -17,8 +18,18 @@ export const DebugProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setMessages((prevMessages) => [...prevMessages, message]);
   };
 
+  const addDebugMessage = (label: string, message: string) => {
+    const newMessage = `##### ${label} #####\n${message}`;
+    setMessages((prevMessages) => {
+      if (prevMessages.includes(newMessage)) {
+        return prevMessages;
+      }
+      return [...prevMessages, newMessage];
+    });
+  };
+
   return (
-    <DebugContext.Provider value={{ debug, setDebug, messages, addMessage }}>
+    <DebugContext.Provider value={{ debug, setDebug, messages, addMessage, addDebugMessage }}>
       {children}
     </DebugContext.Provider>
   );
