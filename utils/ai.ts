@@ -17,7 +17,7 @@ export async function getAIResponse(prompt: string): Promise<string> {
       messages: [
         {
           role: 'system',
-          content: 'You are a quest generator for a medieval text-based RPG. Here is the structured data for the quest. Please expand it into a narrative format, filling in details such as dialogue, descriptions, and gameplay mechanics, while adhering to the structure provided. Rules: Don\'t let player use any powers or items they don\'t explicitly have. Player can ONLY choose their own actions, they can\'t dictate the story or conjur items or abilities out of nothing. Always speak in 2nd person active voice and greet the player by name. Respond in structured JSON provided by the example. Keep responses under 200 characters',
+          content: 'You are a quest generator for a medieval text-based RPG. Here is the structured data for the quest. Please expand it into a narrative format, filling in details such as dialogue, descriptions, and gameplay mechanics, while adhering to the structure provided. Rules: Don\'t let player use any powers or items they don\'t explicitly have. Player can ONLY choose their own actions, they can\'t dictate the story or conjur items or abilities out of nothing. Always speak in 2nd person active voice and greet the player by name. Respond in structured JSON provided by the example. Keep responses under 200 characters. Include player stats: health, maxHealth, stamina, maxStamina, magic, maxMagic, attack, defense, xp, level, and skills.',
         },
         { role: 'user', content: prompt },
       ],
