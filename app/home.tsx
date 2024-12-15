@@ -16,6 +16,11 @@ import { useGame } from '../src/GameContext'; // Import your context
 import { useRouter } from 'expo-router';
 import { useDebug } from '../src/DebugContext';
 import questData from '../story/quest1-milestone1.json'; // Import the quest data
+import StatsBar from './components/StatsBar'; // Import the StatsBar component
+import ActionButtons from './components/ActionButtons'; // Import the ActionButtons component
+import InventoryPanel from './components/InventoryPanel'; // Import the InventoryPanel component
+import StoryPane from './components/StoryPane'; // Import the StoryPane component
+import InputBox from './components/InputBox'; // Import the InputBox component
 
 export default function HomeScreen() {
   const { gameState, updateGameState } = useGame();
@@ -118,7 +123,7 @@ export default function HomeScreen() {
       }
       Response instruction data are just examples, be creative!
       Provide the updated game state as a plain JSON object without any formatting characters like \`\`\`
-      Always ask what the player wants to do next at the end of your response.
+      Always ask what the player wants to do next inside the story JSON..
     `;
 
     addDebugMessage('\r\r###### Message Sent ######\r\r', prompt); // Add labeled message
@@ -165,130 +170,26 @@ export default function HomeScreen() {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
           {/* Stats Bar */}
-          <TouchableOpacity
-            activeOpacity={1}
-            onLongPress={() => setDebug(!debug)}
-          >
-            <View style={styles.statsBar}>
-              <View style={styles.statsRow}>
-                <Text style={styles.stat}>❤️ {gameState.playerStats.health}/{gameState.playerStats.maxHealth}</Text>
-                <Text style={styles.stat}>⚡ {gameState.playerStats.stamina}/{gameState.playerStats.maxStamina}</Text>
-                <Text style={styles.stat}>✨ {gameState.playerStats.magic}/{gameState.playerStats.maxMagic}</Text>
-                <Text style={styles.stat}>💰 {gameState.playerStats.gold}</Text>
-              </View>
-              <View style={styles.statsRow}>
-                <Text style={styles.stat}>⚔️ {gameState.playerStats.attack}</Text>
-                <Text style={styles.stat}>🛡️ {gameState.playerStats.defense}</Text>
-                <Text style={styles.stat}>⭐ XP: {gameState.playerStats.xp}</Text>
-                <Text style={styles.stat}>🏅 Level: {gameState.playerStats.level}</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-
+          <StatsBar gameState={gameState} debug={debug} setDebug={setDebug} />
           {/* Story Pane */}
-          <ScrollView
-            style={styles.storyPane}
-            ref={scrollViewRef}
-            onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
-          >
-            <Text style={styles.storyText}>{gameState.story}</Text>
-            {loading && <Text style={styles.loadingText}>Thinking...</Text>}
-          </ScrollView>
-
+          <StoryPane gameState={gameState} loading={loading} scrollViewRef={scrollViewRef} />
           {/* Action Buttons */}
-          <View style={styles.actionButtons}>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => setInventoryVisible(!inventoryVisible)} // Toggle inventory visibility
-            >
-              <Text style={styles.buttonText}>📦 Inventory</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
-              <Text style={styles.buttonText}>🗺 Map</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => {
-                if (debug) {
-                  router.push('/DebugScreen');  // Use leading slash and match case
-                } else {
-                  // Existing Camp action
-                }
-              }}
-            >
-              <Text style={styles.buttonText}>{debug ? '🐞 Debug' : '🔥 Camp'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => {
-                router.push('/MenuScreen');
-                console.log('MenuScreen pushed');
-              }}
-            >
-              <Text style={styles.buttonText}>📋 Menu</Text>
-            </TouchableOpacity>
-          </View>
-
+          <ActionButtons
+            inventoryVisible={inventoryVisible}
+            setInventoryVisible={setInventoryVisible}
+            debug={debug}
+            router={router}
+          />
           {/* Input Box */}
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Type your command here..."
-              value={input}
-              onChangeText={setInput}
-            />
-            <TouchableOpacity
-              style={styles.sendButton}
-              onPress={() => {
-                if (input.trim()) {
-                  handleInput(input.trim());
-                  setInput('');
-                }
-              }}
-            >
-              <Text style={styles.sendButtonText}>Send</Text>
-            </TouchableOpacity>
-          </View>
-
+          <InputBox input={input} setInput={setInput} handleInput={handleInput} />
           {/* Inventory Panel */}
           {inventoryVisible && (
-            <View style={styles.inventoryPanel}>
-              <View style={styles.inventoryHeader}>
-                <Text style={styles.inventoryTitle}>Inventory</Text>
-                <TouchableOpacity onPress={() => setInventoryVisible(false)}>
-                  <Text style={styles.closeButton}>Close</Text>
-                </TouchableOpacity>
-              </View>
-              {gameState.inventory.map((item, index) => {
-                const isEquipped = gameState.equippedItems.some(equippedItem => equippedItem?.id === item.id);
-                return (
-                  <View
-                    key={index}
-                    style={[
-                      styles.inventoryItem,
-                      isEquipped && styles.equippedItem,
-                    ]}
-                  >
-                    <Text style={styles.itemName}>{item.name} {isEquipped && '✔️'}</Text>
-                    <Text style={styles.itemQuantity}>({item.quantity})</Text>
-                    <View style={styles.inventoryActions}>
-                      <TouchableOpacity
-                        style={styles.inventoryButton}
-                        onPress={() => handleUse(item.id)}
-                      >
-                        <Text>Use</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        style={styles.inventoryButton}
-                        onPress={() => handleEquip(item.id)}
-                      >
-                        <Text>{isEquipped ? 'Stow' : 'Equip'}</Text>
-                      </TouchableOpacity>
-                    </View>
-                  </View>
-                );
-              })}
-            </View>
+            <InventoryPanel
+              gameState={gameState}
+              handleUse={handleUse}
+              handleEquip={handleEquip}
+              setInventoryVisible={setInventoryVisible}
+            />
           )}
         </View>
       </TouchableWithoutFeedback>
@@ -300,85 +201,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fef9e7',
-  },
-  statsBar: {
-    flexDirection: 'column',
-    backgroundColor: '#c2a772',
-    padding: 10,
-    borderBottomWidth: 2,
-    borderBottomColor: '#4b2e05',
-  },
-  statsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
-  stat: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 12,
-  },
-  storyPane: {
-    flex: 1,
-    backgroundColor: '#fff8e1',
-    marginVertical: 10,
-    padding: 10,
-    borderWidth: 2,
-    borderColor: '#4b2e05',
-  },
-  storyText: {
-    fontSize: 16,
-    lineHeight: 22,
-  },
-  loadingText: {
-    fontStyle: 'italic',
-    color: 'gray',
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: '#c2a772',
-    padding: 10,
-    borderTopWidth: 2,
-    borderTopColor: '#4b2e05',
-  },
-  actionButton: {
-    backgroundColor: '#f8f4ec',
-    borderWidth: 2,
-    borderColor: '#4b2e05',
-    borderRadius: 4,
-    padding: 5,
-  },
-  buttonText: {
-    fontSize: 12,
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    padding: 10,
-    backgroundColor: '#f8f4ec',
-    borderTopColor: '#4b2e05',
-    borderTopWidth: 2,
-    alignItems: 'center',
-  },
-  input: {
-    flex: 1,
-    borderWidth: 2,
-    borderColor: '#4b2e05',
-    borderRadius: 4,
-    padding: 8,
-    backgroundColor: '#fff',
-    marginRight: 2,
-  },
-  sendButton: {
-    padding: 10,
-    backgroundColor: '#4b2e05',
-    borderRadius: 4,
-    marginLeft: 2,
-
-  },
-  sendButtonText: {
-    color: '#fff',
-    fontSize: 14,
   },
   inventoryPanel: {
     position: 'absolute',

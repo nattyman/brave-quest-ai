@@ -1,0 +1,98 @@
+{
+    "skillsDetail": {
+      "strong_attack": {
+        "name": "Strong Attack",
+        "type": "active",
+        "description": "A powerful attack that deals double damage but consumes stamina.",
+        "effects": {
+          "damageMultiplier": 2,
+          "staminaCost": 10
+        }
+      },
+      "shield_block": {
+        "name": "Shield Block",
+        "type": "active",
+        "description": "Block an enemy's attack, reducing incoming damage by 50%.",
+        "effects": {
+          "damageReduction": 0.5,
+          "staminaCost": 5
+        }
+      },
+      "fireball": {
+        "name": "Fireball",
+        "type": "active",
+        "description": "Hurl a ball of fire at an enemy, dealing magic-based damage.",
+        "effects": {
+          "magicDamage": 25,
+          "magicCost": 20
+        }
+      },
+      "healing_touch": {
+        "name": "Healing Touch",
+        "type": "active",
+        "description": "A soothing touch that restores 20 health points.",
+        "effects": {
+          "healthRestore": 20,
+          "magicCost": 15
+        }
+      },
+      "regeneration": {
+        "name": "Regeneration",
+        "type": "passive",
+        "description": "Gradually restore 5 health points at the end of every turn.",
+        "effects": {
+          "healthRegenPerTurn": 5
+        }
+      },
+      "power_strike": {
+        "name": "Power Strike",
+        "type": "active",
+        "description": "A heavy strike that deals 1.5x damage and stuns the enemy.",
+        "effects": {
+          "damageMultiplier": 1.5,
+          "stunDuration": 1,
+          "staminaCost": 15
+        }
+      },
+      "magic_shield": {
+        "name": "Magic Shield",
+        "type": "active",
+        "description": "Create a barrier that absorbs 30 damage for 3 turns.",
+        "effects": {
+          "damageAbsorption": 30,
+          "duration": 3,
+          "magicCost": 25
+        }
+      },
+      "berserk_rage": {
+        "name": "Berserk Rage",
+        "type": "active",
+        "description": "Enter a frenzied state, increasing damage by 50% for 2 turns but reducing defense.",
+        "effects": {
+          "damageMultiplier": 1.5,
+          "defensePenalty": 0.5,
+          "duration": 2,
+          "staminaCost": 20
+        }
+      },
+      "quick_heal": {
+        "name": "Quick Heal",
+        "type": "active",
+        "description": "Restore 10 health instantly at the cost of stamina.",
+        "effects": {
+          "healthRestore": 10,
+          "staminaCost": 10
+        }
+      },
+      "arcane_blast": {
+        "name": "Arcane Blast",
+        "type": "active",
+        "description": "Unleash a blast of arcane energy, damaging all nearby enemies.",
+        "effects": {
+          "areaDamage": 20,
+          "magicCost": 30
+        }
+      }
+    }
+  }
+  
