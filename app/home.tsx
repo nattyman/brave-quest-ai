@@ -22,7 +22,7 @@ export default function HomeScreen() {
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const { debug, addMessage, setDebug } = useDebug(); // Get setDebug from useDebug
+  const { debug, addMessage, setDebug, addDebugMessage } = useDebug(); // Get addDebugMessage from useDebug
   const scrollViewRef = useRef<ScrollView>(null); // Add a ref for the ScrollView
   const [inventoryVisible, setInventoryVisible] = useState(false); // Add state for inventory visibility
   const [initialQuestionAnswered, setInitialQuestionAnswered] = useState(false); // Add state for initial question
@@ -113,9 +113,14 @@ export default function HomeScreen() {
       }
       Response instruction data are just examples, be creative!
       Provide the updated game state as a plain JSON object without any formatting characters like \`\`\`
+      Always ask what the player wants to do next at the end of your response.
     `;
 
-    const aiResponse = await getAIResponse(prompt, addMessage);
+    addDebugMessage('\r\r###### Message Sent ######\r\r', prompt); // Add labeled message
+
+    const aiResponse = await getAIResponse(prompt);
+
+    addDebugMessage('\r\r###### Message Received ######\r\r', aiResponse); // Add labeled message
 
     try {
       const changes = JSON.parse(aiResponse);

@@ -11,14 +11,8 @@ if (!apiKey) {
 // Initialize the OpenAI client
 const client = new OpenAI({ apiKey });
 
-export async function getAIResponse(
-  prompt: string,
-  addMessage: (message: string) => void
-): Promise<string> {
+export async function getAIResponse(prompt: string): Promise<string> {
   try {
-    // Store the user's prompt
-    addMessage(`System: ${prompt}`);
-
     const response = await client.chat.completions.create({
       messages: [
         {
@@ -38,10 +32,6 @@ export async function getAIResponse(
       response.choices[0].message.content
     ) {
       const responseText = response.choices[0].message.content.trim();
-
-      // Store the AI's response
-      addMessage(`AI: ${responseText}`);
-
       return responseText;
     } else {
       throw new Error('Invalid response structure from OpenAI API');
