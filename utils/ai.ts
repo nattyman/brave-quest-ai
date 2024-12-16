@@ -24,7 +24,6 @@ export async function getAIResponse(prompt: string): Promise<string> {
       model: 'gpt-4o-mini',
       max_tokens: 500,
     });
-
     if (
       response.choices &&
       response.choices[0] &&

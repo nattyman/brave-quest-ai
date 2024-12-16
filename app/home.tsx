@@ -129,7 +129,7 @@ export default function HomeScreen() {
 
     Response Instructions: Respond with changes to the game state in this JSON Object format:
       {
-        "playerStats": { "health": -x, "maxHealth": +x, "stamina": -x, "maxStamina": +x, "magic": -x, "maxMagic": +x, "attack": +x, "defense": +x, "xp": +x, "level": +x, "skills": ["new skill"], "gold": +x }, //Only send changes to stats and maxStats
+        "playerStats": { "health": -x, "maxHealth": x, "stamina": -x, "maxStamina": x, "magic": -x, "maxMagic": x, "attack": x, "defense": x, "xp": x, "level": x, "skills": ["new skill"], "gold": x }, //Only send changes to stats and maxStats, whole numbers to add and negative numbers to subtrack. Don't use a + sign.
         "inventory": { "add": ["wooden_staff", "small_ring"], "remove": ["health_potion"] }, // Only add items from the available items list
         "equippedItems": ["bronze_dagger", null],
         "story": "The story content goes here..."
@@ -153,14 +153,22 @@ export default function HomeScreen() {
       const newEquippedItems = changes.equippedItems?.map((name: string) => gameState.inventory.find(item => item.name === name) || null) ?? gameState.equippedItems;
 
       // Add new items to the inventory
-      changes.inventory?.add?.forEach((itemName: string) => {
-        const itemDetails = basicItems.itemsBasic.find(item => item.name === itemName);
+      changes.inventory?.add?.forEach((itemId: string) => { // Check if the item exists in the basic items list
+        const itemDetails = basicItems.itemsBasic.find(item => item.id === itemId);
         if (itemDetails) {
           addItem({ id: itemDetails.id, name: itemDetails.name, quantity: 1 });
         } else {
-          console.error(`Item with name ${itemName} does not exist in the available items list.`);
+          console.error(`Item with id ${itemId} does not exist in the available items list.`);
         }
       });
+
+      // Remove items from the inventory
+      const updatedInventory = gameState.inventory.map(item => {
+        if (changes.inventory?.remove?.includes(item.id)) {
+          return { ...item, quantity: item.quantity - 1 };
+        }
+        return item;
+      }).filter(item => item.quantity > 0);
 
       updateGameState({
         playerStats: {
@@ -169,7 +177,7 @@ export default function HomeScreen() {
           gold: gameState.playerStats.gold + (changes.playerStats.gold || 0),
           xp: gameState.playerStats.xp + (changes.playerStats.xp || 0),
         },
-        inventory: gameState.inventory.filter(item => !changes.inventory?.remove?.includes(item.name)),
+        inventory: updatedInventory,
         equippedItems: newEquippedItems,
         story: `${gameState.story}\n\n${playerResponse}\n\n${changes.story}`,
         initialQuestionAnswered: true, // Set to true after the first response where player gives their name
