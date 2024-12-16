@@ -1,4 +1,5 @@
 import React, { useState, createContext, useContext } from 'react';
+import basicItems from '../story/items-basic.json'; // Import the basic items list
 
 // Define the shape of the game state
 export type GameState = { // Export the GameState type
@@ -26,10 +27,35 @@ export type GameState = { // Export the GameState type
 type GameContextType = {
   gameState: GameState;
   updateGameState: (changes: Partial<GameState>) => void;
+  addItem: (item: { id: string; name: string; quantity: number }) => void; // Add this line
 };
 
 // Create the context
 const GameContext = createContext<GameContextType | undefined>(undefined);
+
+// Move addItem outside GameProvider and make it a function factory
+const createAddItem = (setGameState: React.Dispatch<React.SetStateAction<GameState>>) => 
+  (item: { id: string; name: string; quantity: number }) => {
+    const itemDetails = basicItems.itemsBasic.find(i => i.id === item.id);
+    if (!itemDetails) {
+      console.error(`Item with id ${item.id} does not exist in the available items list.`);
+      return;
+    }
+
+    setGameState((prevState) => {
+      const existingItem = prevState.inventory.find(i => i.id === item.id);
+      if (existingItem) {
+        existingItem.quantity += item.quantity;
+      } else {
+        prevState.inventory.push({
+          ...itemDetails,
+          quantity: item.quantity,
+        });
+      }
+      console.log('Updated Inventory:', prevState.inventory);
+      return { ...prevState };
+    });
+  };
 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [gameState, setGameState] = useState<GameState>({
@@ -48,10 +74,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       skills: [],
       gold: 50,
     },
-    inventory: [
-      { id: '1', name: 'Sword', quantity: 1 },
-      { id: '2', name: 'Shield', quantity: 1 },
-    ],
+    inventory: [], // Initialize inventory as empty
     equippedItems: [null, null], // Initialize equippedItems with two slots
     story: 'Welcome, brave adventurer! What is your name?',
     initialQuestionAnswered: false,
@@ -105,17 +128,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  const addItem = (item: { id: string; name: string; quantity: number }) => {
-    setGameState((prevState) => {
-      const existingItem = prevState.inventory.find(i => i.id === item.id);
-      if (existingItem) {
-        existingItem.quantity += item.quantity;
-      } else {
-        prevState.inventory.push(item);
-      }
-      return { ...prevState };
-    });
-  };
+  const addItem = createAddItem(setGameState);
 
   const removeItem = (itemId: string) => {
     setGameState((prevState) => {
@@ -164,7 +177,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <GameContext.Provider value={{ gameState, updateGameState }}>
+    <GameContext.Provider value={{ gameState, updateGameState, addItem }}>
       {children}
     </GameContext.Provider>
   );

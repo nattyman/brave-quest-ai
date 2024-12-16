@@ -1,0 +1,77 @@
+{
+    "itemsBasic": [
+      {
+        "id": "health_potion",
+        "name": "Health Potion",
+        "type": "consumable",
+        "level": 1,
+        "location": ["shops", "chests"],
+        "value": 10
+      },
+      {
+        "id": "stamina_potion",
+        "name": "Stamina Potion",
+        "type": "consumable",
+        "level": 1,
+        "location": ["shops", "chests"],
+        "value": 10
+      },
+      {
+        "id": "magic_potion",
+        "name": "Magic Potion",
+        "type": "consumable",
+        "level": 1,
+        "location": ["shops", "chests"],
+        "value": 15
+      },
+      {
+        "id": "wooden_staff",
+        "name": "Wooden Staff",
+        "type": "weapon",
+        "level": 1,
+        "location": ["shops", "starter_kit"],
+        "value": 25
+      },
+      {
+        "id": "leather_shield",
+        "name": "Leather Shield",
+        "type": "shield",
+        "level": 1,
+        "location": ["shops", "starter_kit"],
+        "value": 20
+      },
+      {
+        "id": "small_ring",
+        "name": "Small Ring of Luck",
+        "type": "accessory",
+        "level": 2,
+        "location": ["random_loot", "shops"],
+        "value": 30
+      },
+      {
+        "id": "bronze_dagger",
+        "name": "Bronze Dagger",
+        "type": "weapon",
+        "level": 2,
+        "location": ["shops", "random_loot"],
+        "value": 35
+      },
+      {
+        "id": "cloth_armor",
+        "name": "Cloth Armor",
+        "type": "armor",
+        "level": 1,
+        "location": ["shops"],
+        "value": 20
+      },
+      {
+        "id": "magic_scroll",
+        "name": "Magic Scroll",
+        "type": "consumable",
+        "level": 2,
+        "location": ["random_loot", "shops"],
+        "value": 50
+      }
+    ]
+  }
+  
