@@ -1,0 +1,49 @@
+{
+  "itemsDetail": [
+    {
+      "id": "health_potion",
+      "description": "Restores 50 health points.",
+      "effects": { "health": 50 }
+    },
+    {
+      "id": "stamina_potion",
+      "description": "Restores 30 stamina points.",
+      "effects": { "stamina": 30 }
+    },
+    {
+      "id": "magic_potion",
+      "description": "Restores 40 magic points.",
+      "effects": { "magic": 40 }
+    },
+    {
+      "id": "wooden_staff",
+      "description": "A basic staff for beginners.",
+      "effects": { "attack": 5 }
+    },
+    {
+      "id": "leather_shield",
+      "description": "A basic shield for protection.",
+      "effects": { "defense": 5 }
+    },
+    {
+      "id": "small_ring",
+      "description": "Increases luck slightly.",
+      "effects": { "luck": 5 }
+    },
+    {
+      "id": "bronze_dagger",
+      "description": "A sharp dagger made of bronze.",
+      "effects": { "attack": 7 }
+    },
+    {
+      "id": "cloth_armor",
+      "description": "Basic armor made of cloth.",
+      "effects": { "defense": 3 }
+    },
+    {
+      "id": "magic_scroll",
+      "description": "A scroll containing a powerful spell.",
+      "effects": { "magic": 50 }
+    }
+  ]
+}

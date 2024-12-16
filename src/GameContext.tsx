@@ -1,4 +1,6 @@
 import React, { useState, createContext, useContext } from 'react';
+import itemsDetail from '../story/items-detail-list.json'; // Import the detailed items list
+import itemsBasic from '../story/items-basic-list.json'; // Import the basic items list
 
 // Define the shape of the game state
 export type GameState = { // Export the GameState type
@@ -48,10 +50,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       skills: [],
       gold: 50,
     },
-    inventory: [
-      { id: '1', name: 'Sword', quantity: 1 },
-      { id: '2', name: 'Shield', quantity: 1 },
-    ],
+    inventory: [], // Initialize with an empty inventory
     equippedItems: [null, null], // Initialize equippedItems with two slots
     story: 'Welcome, brave adventurer! What is your name?',
     initialQuestionAnswered: false,
@@ -105,14 +104,28 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     });
   };
 
-  const addItem = (item: { id: string; name: string; quantity: number }) => {
+  const addItem = (item: { id: string; quantity: number }) => {
     setGameState((prevState) => {
-      const existingItem = prevState.inventory.find(i => i.id === item.id);
+      const itemBasic = itemsBasic.itemsBasic.find(basic => basic.id === item.id);
+      if (!itemBasic) {
+        console.error(`Item with ID ${item.id} not found in items list.`);
+        return prevState;
+      }
+
+      const existingItem = prevState.inventory.find(i => i.id === itemBasic.id);
       if (existingItem) {
         existingItem.quantity += item.quantity;
       } else {
-        prevState.inventory.push(item);
+        prevState.inventory.push({
+          id: itemBasic.id,
+          name: itemBasic.name,
+          quantity: item.quantity,
+        });
       }
+
+      // Log the updated inventory for debugging
+      console.log('Updated Inventory:', prevState.inventory);
+
       return { ...prevState };
     });
   };
@@ -134,11 +147,23 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const useItem = (itemId: string) => {
     setGameState((prevState) => {
       const item = prevState.inventory.find(i => i.id === itemId);
-      if (item && item.type === 'consumable') {
-        prevState.playerStats.health += 10; // Example effect
-        removeItem(itemId);
+      if (item) {
+        const itemDetail = itemsDetail.itemsDetail.find(detail => detail.id === itemId);
+        if (itemDetail && itemDetail.effects) {
+          const newPlayerStats = { ...prevState.playerStats };
+          Object.keys(itemDetail.effects).forEach(effect => {
+            if (effect in newPlayerStats) {
+              (newPlayerStats as any)[effect] += itemDetail.effects[effect as keyof typeof itemDetail.effects];
+            }
+          });
+          const newInventory = prevState.inventory.map(i => 
+            i.id === itemId ? { ...i, quantity: i.quantity - 1 } : i
+          ).filter(i => i.quantity > 0);
+          const newStory = `${prevState.story}\nYou used a ${item.name}. ${itemDetail.description}`;
+          return { ...prevState, playerStats: newPlayerStats, inventory: newInventory, story: newStory };
+        }
       }
-      return { ...prevState };
+      return prevState;
     });
   };
 

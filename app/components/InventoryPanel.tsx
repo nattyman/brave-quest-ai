@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { GameState } from '../../src/GameContext'; // Import the GameState type
+import itemsBasic from '../../story/items-basic-list.json'; // Import the basic items list
 
 type InventoryPanelProps = {
   gameState: GameState;
@@ -10,6 +11,8 @@ type InventoryPanelProps = {
 };
 
 export default function InventoryPanel({ gameState, handleUse, handleEquip, setInventoryVisible }: InventoryPanelProps) {
+  console.log('itemsBasic:', itemsBasic); // Log the itemsBasic to verify its structure
+
   return (
     <View style={styles.inventoryPanel}>
       <View style={styles.inventoryHeader}>
@@ -18,35 +21,50 @@ export default function InventoryPanel({ gameState, handleUse, handleEquip, setI
           <Text style={styles.closeButton}>Close</Text>
         </TouchableOpacity>
       </View>
-      {gameState.inventory.map((item, index) => {
-        const isEquipped = gameState.equippedItems.some(equippedItem => equippedItem?.id === item.id);
-        return (
-          <View
-            key={index}
-            style={[
-              styles.inventoryItem,
-              isEquipped && styles.equippedItem,
-            ]}
-          >
-            <Text style={styles.itemName}>{item.name} {isEquipped && '✔️'}</Text>
-            <Text style={styles.itemQuantity}>({item.quantity})</Text>
-            <View style={styles.inventoryActions}>
-              <TouchableOpacity
-                style={styles.inventoryButton}
-                onPress={() => handleUse(item.id)}
-              >
-                <Text>Use</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.inventoryButton}
-                onPress={() => handleEquip(item.id)}
-              >
-                <Text>{isEquipped ? 'Stow' : 'Equip'}</Text>
-              </TouchableOpacity>
+      {gameState.inventory.length === 0 ? (
+        <Text style={styles.emptyMessage}>Empty - So sad :(</Text>
+      ) : (
+        gameState.inventory.map((item, index) => {
+          const isEquipped = gameState.equippedItems.some(equippedItem => equippedItem?.id === item.id);
+          const itemBasic = itemsBasic.itemsBasic.find(basic => basic.id === item.id);
+
+          if (!itemBasic) {
+            console.log(`Item with ID ${item.id} not found in itemsBasic`);
+          } else {
+            console.log(`Found itemBasic: ${itemBasic.name}, Type: ${itemBasic.type}`);
+          }
+
+          return (
+            <View
+              key={index}
+              style={[
+                styles.inventoryItem,
+                isEquipped && styles.equippedItem,
+              ]}
+            >
+              <Text style={styles.itemName}>{itemBasic?.name} {isEquipped && '✔️'}</Text>
+              <Text style={styles.itemQuantity}>({item.quantity})</Text>
+              <View style={styles.inventoryActions}>
+                {itemBasic?.type === 'consumable' ? (
+                  <TouchableOpacity
+                    style={styles.inventoryButton}
+                    onPress={() => handleUse(item.id)}
+                  >
+                    <Text>Use</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.inventoryButton}
+                    onPress={() => handleEquip(item.id)}
+                  >
+                    <Text>{isEquipped ? 'Stow' : 'Equip'}</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
-          </View>
-        );
-      })}
+          );
+        })
+      )}
     </View>
   );
 }
@@ -74,6 +92,11 @@ const styles = StyleSheet.create({
   closeButton: {
     fontSize: 16,
     color: 'red',
+  },
+  emptyMessage: {
+    textAlign: 'center',
+    fontStyle: 'italic',
+    color: '#888',
   },
   inventoryItem: {
     flexDirection: 'row',

@@ -121,9 +121,9 @@ export default function HomeScreen() {
     Response Instructions: Respond with changes to the game state in this JSON Object format:
       {
         "playerStats": { "health": -x, "maxHealth": +x, "stamina": -x, "maxStamina": +x, "magic": -x, "maxMagic": +x, "attack": +x, "defense": +x, "xp": +x, "level": +x, "skills": ["new skill"], "gold": +x }, //Only send changes to stats and maxStats, 0 if no change
-        "inventory": { "add": ["Health Potion", "Sword of fire"], "remove": ["Old Sword"] },
-        "equippedItems": ["Sword of fire", null],
-        "story": "You took damage but found a health potion."
+        "inventory": { "add": ["leather_shield", "health_potion"], "remove": ["stamina_potion] },
+        "equippedItems": ["wooden_staff", null], // List of item IDs, null if slot is empty
+        "story": "You drank your Stamina Potion and restored some Stamina. You found a Leather Shield and Health Potion."
       }
       Response instruction data are just examples, be creative!
       Provide the updated game state as a plain JSON object without any formatting characters like \`\`\`
