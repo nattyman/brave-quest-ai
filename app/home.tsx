@@ -16,6 +16,7 @@ import { useGame } from '../src/GameContext'; // Import your context
 import { useRouter } from 'expo-router';
 import { useDebug } from '../src/DebugContext';
 import questData from '../story/quest1-milestone1.json'; // Import the quest data
+import itemsBasic from '../story/items-basic-list.json'; // Import the basic items data
 import StatsBar from './components/StatsBar'; // Import the StatsBar component
 import ActionButtons from './components/ActionButtons'; // Import the ActionButtons component
 import InventoryPanel from './components/InventoryPanel'; // Import the InventoryPanel component
@@ -87,8 +88,11 @@ export default function HomeScreen() {
     }
 
     const prompt = `
-    Quest Information:
-    ${JSON.stringify(questData)}  
+    Story Information:
+    ${JSON.stringify(questData)}
+
+    Items Available to find or buy:
+    ${JSON.stringify(itemsBasic)}
 
     Story So Far:
     ${gameState.story}    
