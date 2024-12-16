@@ -1,0 +1,93 @@
+{
+    "itemsDetail": {
+      "health_potion": {
+        "name": "Health Potion",
+        "type": "consumable",
+        "description": "Restores 20 health points when used.",
+        "effects": {
+          "healthRestore": 20
+        }
+      },
+      "stamina_potion": {
+        "name": "Stamina Potion",
+        "type": "consumable",
+        "description": "Restores 15 stamina points when used.",
+        "effects": {
+          "staminaRestore": 15
+        }
+      },
+      "magic_potion": {
+        "name": "Magic Potion",
+        "type": "consumable",
+        "description": "Restores 15 magic points when used.",
+        "effects": {
+          "magicRestore": 15
+        }
+      },
+      "wooden_staff": {
+        "name": "Wooden Staff",
+        "type": "weapon",
+        "description": "A basic wooden staff. Slightly increases magic power.",
+        "effects": {
+          "magicDamage": 5,
+          "magicBoost": 5
+        },
+        "requirements": {
+          "equipSlot": "hand"
+        }
+      },
+      "leather_shield": {
+        "name": "Leather Shield",
+        "type": "shield",
+        "description": "A simple shield made of leather. Provides light defense.",
+        "effects": {
+          "defense": 5
+        },
+        "requirements": {
+          "equipSlot": "hand"
+        }
+      },
+      "small_ring": {
+        "name": "Small Ring of Luck",
+        "type": "accessory",
+        "description": "A lucky ring that slightly increases critical hit chance.",
+        "effects": {
+          "critChanceIncrease": 0.05
+        },
+        "requirements": {
+          "equipSlot": "accessory"
+        }
+      },
+      "bronze_dagger": {
+        "name": "Bronze Dagger",
+        "type": "weapon",
+        "description": "A sharp bronze dagger that deals moderate damage.",
+        "effects": {
+          "damage": 8
+        },
+        "requirements": {
+          "equipSlot": "hand"
+        }
+      },
+      "cloth_armor": {
+        "name": "Cloth Armor",
+        "type": "armor",
+        "description": "Light armor that provides minimal protection.",
+        "effects": {
+          "defense": 3
+        },
+        "requirements": {
+          "equipSlot": "body"
+        }
+      },
+      "magic_scroll": {
+        "name": "Magic Scroll",
+        "type": "consumable",
+        "description": "A scroll that casts a random basic spell when used.",
+        "effects": {
+          "randomSpellEffect": true
+        }
+      }
+    }
+  }
+  

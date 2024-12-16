@@ -12,10 +12,11 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { getAIResponse } from '../utils/ai'; // Import the AI function
-import { useGame } from '../src/GameContext'; // Import your context
+import { useGame } from '../src/GameContext'; // Remove addItem from import
 import { useRouter } from 'expo-router';
 import { useDebug } from '../src/DebugContext';
 import questData from '../story/quest1-milestone1.json'; // Import the quest data
+import basicItems from '../story/items-basic.json'; // Import list of available items
 import StatsBar from './components/StatsBar'; // Import the StatsBar component
 import ActionButtons from './components/ActionButtons'; // Import the ActionButtons component
 import InventoryPanel from './components/InventoryPanel'; // Import the InventoryPanel component
@@ -23,7 +24,7 @@ import StoryPane from './components/StoryPane'; // Import the StoryPane componen
 import InputBox from './components/InputBox'; // Import the InputBox component
 
 export default function HomeScreen() {
-  const { gameState, updateGameState } = useGame();
+  const { gameState, updateGameState, addItem } = useGame(); // Get addItem from context
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -31,6 +32,9 @@ export default function HomeScreen() {
   const scrollViewRef = useRef<ScrollView>(null); // Add a ref for the ScrollView
   const [inventoryVisible, setInventoryVisible] = useState(false); // Add state for inventory visibility
   const [initialQuestionAnswered, setInitialQuestionAnswered] = useState(false); // Add state for initial question
+
+  // Function to roll a d20
+  const rollDice = () => Math.floor(Math.random() * 20) + 1;
 
   // Handle equipping an item
   const handleEquip = (itemId: string) => {
@@ -70,7 +74,7 @@ export default function HomeScreen() {
   // Handle input from the player
   async function handleInput(command: string) {
     setLoading(true);
-    const playerResponse = `Player: ${command}`;// Could replace Player with the player's name
+    const playerResponse = `Player: ${command}` ;// Could replace Player with the player's name
     updateGameState({
       story: `${gameState.story}\n\n${playerResponse}`,
     });
@@ -86,9 +90,15 @@ export default function HomeScreen() {
       return;
     }
 
+    const diceRoll = rollDice(); // Roll a d20
+    console.log('Dice Roll:', diceRoll);
+
     const prompt = `
-    Quest Information:
-    ${JSON.stringify(questData)}  
+    Story Information:
+    ${JSON.stringify(questData)}
+    
+    Available Items List:
+    ${JSON.stringify(basicItems)}
 
     Story So Far:
     ${gameState.story}    
@@ -114,6 +124,9 @@ export default function HomeScreen() {
 
     Player's Command: ${command}
 
+    Random Dice Roll: ${diceRoll}
+    Use the dice roll to help determine the outcome of the player's actions.
+
     Response Instructions: Respond with changes to the game state in this JSON Object format:
       {
         "playerStats": { "health": -x, "maxHealth": +x, "stamina": -x, "maxStamina": +x, "magic": -x, "maxMagic": +x, "attack": +x, "defense": +x, "xp": +x, "level": +x, "skills": ["new skill"], "gold": +x }, //Only send changes to stats and maxStats, 0 if no change
@@ -136,6 +149,16 @@ export default function HomeScreen() {
       const changes = JSON.parse(aiResponse);
       const newEquippedItems = changes.equippedItems?.map((name: string) => gameState.inventory.find(item => item.name === name) || null) ?? gameState.equippedItems;
 
+      // Add new items to the inventory
+      changes.inventory?.add?.forEach((itemName: string) => {
+        const itemDetails = basicItems.itemsBasic.find(item => item.name === itemName);
+        if (itemDetails) {
+          addItem({ id: itemDetails.id, name: itemDetails.name, quantity: 1 });
+        } else {
+          console.error(`Item with name ${itemName} does not exist in the available items list.`);
+        }
+      });
+
       updateGameState({
         playerStats: {
           ...gameState.playerStats,
@@ -143,11 +166,8 @@ export default function HomeScreen() {
           gold: gameState.playerStats.gold + (changes.playerStats.gold || 0),
           xp: gameState.playerStats.xp + (changes.playerStats.xp || 0),
         },
-        inventory: changes.inventory ? [
-          ...gameState.inventory.filter(item => !changes.inventory.remove?.includes(item.name)),
-          ...changes.inventory.add?.map((name: string) => ({ id: `${Date.now()}`, name, quantity: 1 })) || []
-        ] : gameState.inventory,
-        equippedItems: newEquippedItems, // Ensure equippedItems is always defined
+        inventory: gameState.inventory.filter(item => !changes.inventory?.remove?.includes(item.name)),
+        equippedItems: newEquippedItems,
         story: `${gameState.story}\n\n${playerResponse}\n\n${changes.story}`,
         initialQuestionAnswered: true, // Set to true after the first response where player gives their name
       });
