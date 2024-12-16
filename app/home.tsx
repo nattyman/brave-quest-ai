@@ -129,14 +129,17 @@ export default function HomeScreen() {
 
     Response Instructions: Respond with changes to the game state in this JSON Object format:
       {
-        "playerStats": { "health": -x, "maxHealth": +x, "stamina": -x, "maxStamina": +x, "magic": -x, "maxMagic": +x, "attack": +x, "defense": +x, "xp": +x, "level": +x, "skills": ["new skill"], "gold": +x }, //Only send changes to stats and maxStats, 0 if no change
-        "inventory": { "add": ["Health Potion", "Sword of fire"], "remove": ["Old Sword"] },
-        "equippedItems": ["Sword of fire", null],
-        "story": "You took damage but found a health potion."
+        "playerStats": { "health": -x, "maxHealth": +x, "stamina": -x, "maxStamina": +x, "magic": -x, "maxMagic": +x, "attack": +x, "defense": +x, "xp": +x, "level": +x, "skills": ["new skill"], "gold": +x }, //Only send changes to stats and maxStats
+        "inventory": { "add": ["wooden_staff", "small_ring"], "remove": ["health_potion"] }, // Only add items from the available items list
+        "equippedItems": ["bronze_dagger", null],
+        "story": "The story content goes here..."
       }
-      Response instruction data are just examples, be creative!
+      Response instruction data are just examples only provide what fits in the context of the story.
       Provide the updated game state as a plain JSON object without any formatting characters like \`\`\`
-      Always ask what the player wants to do next inside the story JSON..
+      Nudge the player forward in the quest, but give them space to explore. 
+      Always ask what the player wants to do next inside the story JSON.
+      Character must choose to purchase items, don't purchase for them. 
+      Remember to add and remove items from intenvory as needed.
     `;
 
     addDebugMessage('\r\r###### Message Sent ######\r\r', prompt); // Add labeled message
