@@ -71,6 +71,118 @@
         "level": 2,
         "location": ["random_loot", "shops"],
         "value": 50
+      },
+    {
+      "id": "moonshade_fern",
+      "name": "Moonshade Fern",
+      "type": "quest",
+      "level": 1,
+      "location": ["artifact_influence"],
+      "value": 0
+    },
+    {
+      "id": "potion_whisper_shield",
+      "name": "Potion of Whisper Shield",
+      "type": "consumable",
+      "level": 1,
+      "location": ["elara_brew"],
+      "value": 20
+    },
+    {
+      "id": "artifact_fragment",
+      "name": "Fragment of Whispering Artifact",
+      "type": "quest",
+      "level": 2,
+      "location": ["stone_circle"],
+      "value": 0
+    },
+    {
+      "id": "wolf_fang_charm",
+      "name": "Wolf Fang Charm",
+      "type": "accessory",
+      "level": 1,
+      "location": ["corrupted_wolves"],
+      "value": 15
+    },
+    {
+      "id": "artifact_shard_corrupted",
+      "name": "Artifact Shard (Corrupted)",
+      "type": "magic",
+      "level": 2,
+      "location": ["whispering_quest"],
+      "value": 0
+    },
+    {
+      "id": "corrupted_wolf_hide",
+      "name": "Corrupted Wolf Hide",
+      "type": "crafting",
+      "level": 1,
+      "location": ["corrupted_wolves"],
+      "value": 10
+    },
+    {
+      "id": "stone_circle_runes",
+      "name": "Stone Circle Runes",
+      "type": "magic",
+      "level": 2,
+      "location": ["stone_circle"],
+      "value": 30
+    },
+      {
+        "id": "moonshade_fern",
+        "name": "Moonshade Fern",
+        "type": "quest",
+        "level": 1,
+        "location": ["artifact_influence"],
+        "value": 0
+      },
+      {
+        "id": "potion_whisper_shield",
+        "name": "Potion of Whisper Shield",
+        "type": "consumable",
+        "level": 1,
+        "location": ["elara_brew"],
+        "value": 20
+      },
+      {
+        "id": "artifact_fragment",
+        "name": "Fragment of Whispering Artifact",
+        "type": "quest",
+        "level": 2,
+        "location": ["stone_circle"],
+        "value": 0
+      },
+      {
+        "id": "wolf_fang_charm",
+        "name": "Wolf Fang Charm",
+        "type": "accessory",
+        "level": 1,
+        "location": ["corrupted_wolves"],
+        "value": 15
+      },
+      {
+        "id": "artifact_shard_corrupted",
+        "name": "Artifact Shard (Corrupted)",
+        "type": "magic",
+        "level": 2,
+        "location": ["whispering_quest"],
+        "value": 0
+      },
+      {
+        "id": "corrupted_wolf_hide",
+        "name": "Corrupted Wolf Hide",
+        "type": "crafting",
+        "level": 1,
+        "location": ["corrupted_wolves"],
+        "value": 10
+      },
+      {
+        "id": "stone_circle_runes",
+        "name": "Stone Circle Runes",
+        "type": "magic",
+        "level": 2,
+        "location": ["stone_circle"],
+        "value": 30
       }
     ]
   }

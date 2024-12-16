@@ -87,7 +87,65 @@
         "effects": {
           "randomSpellEffect": true
         }
+      },
+          "moonshade_fern": {
+            "name": "Moonshade Fern",
+            "type": "quest",
+            "description": "A magical herb that can be brewed into potions to shield against the whispers' effects.",
+            "effects": {
+              "brewable": true
+            }
+          },
+          "potion_whisper_shield": {
+            "name": "Potion of Whisper Shield",
+            "type": "consumable",
+            "description": "Provides temporary immunity to the whispers' disorienting effects.",
+            "effects": {
+              "whisperResistance": 10,
+              "duration": 300
+            }
+          },
+          "artifact_fragment": {
+            "name": "Fragment of Whispering Artifact",
+            "type": "quest",
+            "description": "A shard of a mysterious artifact generating the whispers. Emits a faint glow and reveals hidden paths.",
+            "effects": {
+              "pathRevealed": true
+            }
+          },
+          "wolf_fang_charm": {
+            "name": "Wolf Fang Charm",
+            "type": "accessory",
+            "description": "A charm crafted from the fang of a corrupted wolf. Provides a minor resilience boost against fear effects.",
+            "effects": {
+              "fearResistance": 5
+            }
+          },
+          "artifact_shard_corrupted": {
+            "name": "Artifact Shard (Corrupted)",
+            "type": "magic",
+            "description": "A glowing shard of the Whispering Artifact. Emits whispers and has a corrupting influence.",
+            "effects": {
+              "willpowerBoost": 1,
+              "dexterityPenalty": -1
+            }
+          },
+          "corrupted_wolf_hide": {
+            "name": "Corrupted Wolf Hide",
+            "type": "crafting",
+            "description": "Hide from a corrupted wolf, infused with the artifact’s magic. Can be used to craft durable gear.",
+            "effects": {
+              "craftingComponent": true
+            }
+          },
+          "stone_circle_runes": {
+            "name": "Stone Circle Runes",
+            "type": "magic",
+            "description": "Ancient runes inscribed with protective magic. Can be used to craft protective amulets or shields.",
+            "effects": {
+              "craftable": true
+            }
+          }
+        }
       }
-    }
-  }
-  
+

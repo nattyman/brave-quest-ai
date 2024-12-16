@@ -24,25 +24,27 @@ export type GameState = { // Export the GameState type
   initialQuestionAnswered: boolean;
 };
 
-type GameContextType = {
-  gameState: GameState;
-  updateGameState: (changes: Partial<GameState>) => void;
-  addItem: (item: { id: string; name: string; quantity: number }) => void; // Add this line
+type GameContextType = { // Export the GameContext type
+  gameState: GameState; // The current state of the game.
+  updateGameState: (changes: Partial<GameState>) => void; //Function to update the game state with partial changes.
+  addItem: (item: { id: string; name: string; quantity: number }) => void; // Function to add an item to the inventory
 };
 
-// Create the context
+// Create the context for the game state
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
-// Move addItem outside GameProvider and make it a function factory
+
+// addItem as a function factory
 const createAddItem = (setGameState: React.Dispatch<React.SetStateAction<GameState>>) => 
   (item: { id: string; name: string; quantity: number }) => {
-    const itemDetails = basicItems.itemsBasic.find(i => i.id === item.id);
-    if (!itemDetails) {
+    const itemDetails = basicItems.itemsBasic.find(i => i.id === item.id); // Find the item in the basic items list
+    if (!itemDetails) { // Check if the item exists
       console.error(`Item with id ${item.id} does not exist in the available items list.`);
       return;
     }
 
-    setGameState((prevState) => {
+
+    setGameState((prevState) => { // Update the game state with the new item
       const existingItem = prevState.inventory.find(i => i.id === item.id);
       if (existingItem) {
         existingItem.quantity += item.quantity;
@@ -57,6 +59,8 @@ const createAddItem = (setGameState: React.Dispatch<React.SetStateAction<GameSta
     });
   };
 
+
+  // Define the GameProvider component to manage the game state and provide it to the app components 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [gameState, setGameState] = useState<GameState>({
     playerStats: {
@@ -80,7 +84,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initialQuestionAnswered: false,
   });
 
-  const xpThresholds = [0, 100, 250, 500]; // Example thresholds for leveling up
+  const xpThresholds = [0, 10, 250, 500]; // thresholds for leveling up 10 is low for testing
+
+  // Function to update the game state with partial changes and handle level up logic
 
   const updateGameState = (changes: Partial<GameState>) => {
     setGameState((prevState) => {
@@ -92,6 +98,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         magic: Math.min(prevState.playerStats.maxMagic, (changes.playerStats?.magic ?? prevState.playerStats.magic)),
       };
 
+      let levelUpMessage = '\nTest level up message\n'; // Initialize level up message
+
       // Check for level up
       if (newPlayerStats.xp >= xpThresholds[newPlayerStats.level]) {
         newPlayerStats.level += 1;
@@ -101,19 +109,23 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
             newPlayerStats.maxStamina += 5;
             newPlayerStats.maxMagic += 5;
             newPlayerStats.skills.push('Strong Attack');
+            levelUpMessage = 'Congratulations! You have reached level 2. Your max health, stamina, and magic have increased, and you have learned a new skill: Strong Attack.';
             break;
           case 3:
             newPlayerStats.attack += 5;
             newPlayerStats.skills.push('Shield Block');
+            levelUpMessage = 'Congratulations! You have reached level 3. Your attack has increased, and you have learned a new skill: Shield Block.';
             break;
           case 4:
             newPlayerStats.defense += 5;
             newPlayerStats.maxMagic += 5;
             newPlayerStats.skills.push('Fireball');
+            levelUpMessage = 'Congratulations! You have reached level 4. Your defense and max magic have increased, and you have learned a new skill: Fireball.';
             break;
           default:
             break;
         }
+        changes.story = `${changes.story ?? ''}\n\n${levelUpMessage}`;
       }
 
       return {
@@ -123,6 +135,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         inventory: changes.inventory ?? prevState.inventory, // Ensure inventory is always defined
         equippedItems: changes.equippedItems ?? prevState.equippedItems, // Update equippedItems
         story: changes.story ?? prevState.story,
+        //story: `${prevState.story}${levelUpMessage ? `\n\n${levelUpMessage}` : ''}${changes.story ? `\n\n${changes.story}` : ''}`,
         initialQuestionAnswered: changes.initialQuestionAnswered ?? prevState.initialQuestionAnswered,
       };
     });

@@ -129,14 +129,19 @@ export default function HomeScreen() {
 
     Response Instructions: Respond with changes to the game state in this JSON Object format:
       {
-        "playerStats": { "health": -x, "maxHealth": +x, "stamina": -x, "maxStamina": +x, "magic": -x, "maxMagic": +x, "attack": +x, "defense": +x, "xp": +x, "level": +x, "skills": ["new skill"], "gold": +x }, //Only send changes to stats and maxStats, 0 if no change
-        "inventory": { "add": ["Health Potion", "Sword of fire"], "remove": ["Old Sword"] },
-        "equippedItems": ["Sword of fire", null],
-        "story": "You took damage but found a health potion."
+
+        "playerStats": { "health": -x, "maxHealth": x, "stamina": -x, "maxStamina": x, "magic": -x, "maxMagic": x, "attack": x, "defense": x, "xp": x, "level": x, "skills": ["new skill"], "gold": x }, //Only send changes to stats and maxStats, whole numbers to add and negative numbers to subtrack. Don't use a + sign.
+        "inventory": { "add": ["wooden_staff", "small_ring"], "remove": ["health_potion"] }, // Only add items from the available items list
+        "equippedItems": ["bronze_dagger", null],
+        "story": "The story content goes here..."
+
       }
-      Response instruction data are just examples, be creative!
+      Response instruction data are just examples only provide what fits in the context of the story.
       Provide the updated game state as a plain JSON object without any formatting characters like \`\`\`
-      Always ask what the player wants to do next inside the story JSON..
+      Nudge the player forward in the quest, but give them space to explore. 
+      Always ask what the player wants to do next inside the story JSON.
+      Character must choose to purchase items, don't purchase for them. 
+      Remember to add and remove items from intenvory as needed.
     `;
 
     addDebugMessage('\r\r###### Message Sent ######\r\r', prompt); // Add labeled message
@@ -150,14 +155,24 @@ export default function HomeScreen() {
       const newEquippedItems = changes.equippedItems?.map((name: string) => gameState.inventory.find(item => item.name === name) || null) ?? gameState.equippedItems;
 
       // Add new items to the inventory
-      changes.inventory?.add?.forEach((itemName: string) => {
-        const itemDetails = basicItems.itemsBasic.find(item => item.name === itemName);
+
+      changes.inventory?.add?.forEach((itemId: string) => { // Check if the item exists in the basic items list
+        const itemDetails = basicItems.itemsBasic.find(item => item.id === itemId);
         if (itemDetails) {
           addItem({ id: itemDetails.id, name: itemDetails.name, quantity: 1 });
         } else {
-          console.error(`Item with name ${itemName} does not exist in the available items list.`);
+          console.error(`Item with id ${itemId} does not exist in the available items list.`);
         }
       });
+
+      // Remove items from the inventory
+      const updatedInventory = gameState.inventory.map(item => {
+        if (changes.inventory?.remove?.includes(item.id)) {
+          return { ...item, quantity: item.quantity - 1 };
+        }
+        return item;
+      }).filter(item => item.quantity > 0);
+
 
       updateGameState({
         playerStats: {
@@ -166,7 +181,7 @@ export default function HomeScreen() {
           gold: gameState.playerStats.gold + (changes.playerStats.gold || 0),
           xp: gameState.playerStats.xp + (changes.playerStats.xp || 0),
         },
-        inventory: gameState.inventory.filter(item => !changes.inventory?.remove?.includes(item.name)),
+        inventory: updatedInventory,
         equippedItems: newEquippedItems,
         story: `${gameState.story}\n\n${playerResponse}\n\n${changes.story}`,
         initialQuestionAnswered: true, // Set to true after the first response where player gives their name

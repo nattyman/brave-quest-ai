@@ -14,7 +14,6 @@
             {
               "name": "Elara, the Herbalist",
               "dialogues": {
-                "personality": "Gumpy, difficult, but knowledgeable about the forest and its dangers.",
                 "initial": "Bring me the Moonshade Fern. It grows at the edge of the forest, where the whispers are loudest.",
                 "success": "Good, you’re braver than most. The whispers are not natural—they're tied to an old magic, the kind that corrupts and devours. The Fern grows where the artifact’s magic bleeds into the land. Be careful—the deeper you go, the more dangerous it becomes.",
                 "info": "The fern feeds on the same magic that empowers the artifact. It can be used to brew potions that shield against the whispers' effects."
@@ -23,7 +22,6 @@
             {
               "name": "Thorne, the Hunter",
               "dialogues": {
-                "personality": "Gruff, no-nonsense, but protective of the village and its people.",
                 "initial": "Tracks lead to the stone circle. You’ll find more there—if you’ve the stomach for it.",
                 "followup": "It’s the artifact. I’ve seen its effects before. It twists creatures into monsters. Don’t let it twist you."
               },
@@ -42,7 +40,7 @@
                 "success": "The player defeats or sneaks past the wolves.",
                 "failure": "The wolves attack, inflicting damage and lowering focus temporarily."
               },
-              "reward": "The player obtains the Moonshade Fern. Elara can use it to brew a protective potion."
+              "reward": "The player obtains the Moonshade Fern."
             },
             {
               "type": "Magical Trap",
@@ -60,11 +58,11 @@
           "task_name": "Discover a Fragment of the Whispering Artifact",
           "objective": "Investigate the stone circle and uncover a shard of the artifact.",
           "details": {
-            "description": "The stone circle emits an overwhelming magical presence. It promises power and asks player if they want it. The whispers grow louder as the player pries a shard from the ground.",
+            "description": "The stone circle emits an overwhelming magical presence. The whispers grow louder as the player pries a shard from the ground.",
             "player_challenge": {
               "check": "Willpower",
               "success": "The player resists the shard's influence.",
-              "failure": "The player accespts offer of power and is briefly overwhelmed, experiencing visions of fear or temptation. -25 health"
+              "failure": "The player is briefly overwhelmed, experiencing visions of fear or temptation."
             },
             "npc_reactions": {
               "Elara": "This shard... it’s part of something larger. Something that shouldn’t exist. If there are more pieces, they must be destroyed before the whispers consume us all.",
@@ -83,14 +81,14 @@
               "description": "Twisted roots threaten to trip the player.",
               "mechanics": {
                 "check": "Dexterity",
-                "failure": "The player trips, taking minor damage. -3 Health."
+                "failure": "The player trips, taking minor damage."
               }
             },
             {
               "description": "Fog of whispers disorients the player.",
               "mechanics": {
                 "check": "Perception",
-                "failure": "The player becomes temporarily lost, costing time or resources. -5 Health for each turn lost"
+                "failure": "The player becomes temporarily lost, costing time or resources."
               }
             }
           ]
