@@ -24,7 +24,6 @@ export type GameState = { // Export the GameState type
   initialQuestionAnswered: boolean;
 };
 
-
 type GameContextType = { // Export the GameContext type
   gameState: GameState; // The current state of the game.
   updateGameState: (changes: Partial<GameState>) => void; //Function to update the game state with partial changes.
@@ -34,6 +33,7 @@ type GameContextType = { // Export the GameContext type
 // Create the context for the game state
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
+
 // addItem as a function factory
 const createAddItem = (setGameState: React.Dispatch<React.SetStateAction<GameState>>) => 
   (item: { id: string; name: string; quantity: number }) => {
@@ -42,6 +42,7 @@ const createAddItem = (setGameState: React.Dispatch<React.SetStateAction<GameSta
       console.error(`Item with id ${item.id} does not exist in the available items list.`);
       return;
     }
+
 
     setGameState((prevState) => { // Update the game state with the new item
       const existingItem = prevState.inventory.find(i => i.id === item.id);
@@ -57,6 +58,7 @@ const createAddItem = (setGameState: React.Dispatch<React.SetStateAction<GameSta
       return { ...prevState };
     });
   };
+
 
   // Define the GameProvider component to manage the game state and provide it to the app components 
 export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -85,6 +87,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const xpThresholds = [0, 10, 250, 500]; // thresholds for leveling up 10 is low for testing
 
   // Function to update the game state with partial changes and handle level up logic
+
   const updateGameState = (changes: Partial<GameState>) => {
     setGameState((prevState) => {
       const newPlayerStats = {
