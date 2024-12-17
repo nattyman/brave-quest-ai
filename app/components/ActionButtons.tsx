@@ -40,20 +40,12 @@ export default function ActionButtons({ inventoryVisible, setInventoryVisible, d
           if (debug) {
             router.push('/DebugScreen');  // Use leading slash and match case
           } else {
-            // Existing Camp action
+            router.push('/MenuScreen');
+            console.log('MenuScreen pushed');
           }
         }}
       >
-        <Text style={styles.buttonText}>{debug ? '🐞 Debug' : '🔥 Camp'}</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.actionButton}
-        onPress={() => {
-          router.push('/MenuScreen');
-          console.log('MenuScreen pushed');
-        }}
-      >
-        <Text style={styles.buttonText}>📋 Menu</Text>
+        <Text style={styles.buttonText}>{debug ? '🐞 Debug' : '📋 Menu'}</Text>
       </TouchableOpacity>
     </View>
   );
