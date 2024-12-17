@@ -23,6 +23,7 @@ import InventoryPanel from './components/InventoryPanel'; // Import the Inventor
 import StoryPane from './components/StoryPane'; // Import the StoryPane component
 import InputBox from './components/InputBox'; // Import the InputBox component
 import StatsPanel from './components/StatsPanel'; // Import the StatsPanel component
+import MagicPanel from './components/MagicPanel'; // Import the MagicPanel component
 
 export default function HomeScreen() {
   const { gameState, updateGameState, addItem } = useGame(); // Get addItem from context
@@ -34,6 +35,7 @@ export default function HomeScreen() {
   const [inventoryVisible, setInventoryVisible] = useState(false); // Add state for inventory visibility
   const [initialQuestionAnswered, setInitialQuestionAnswered] = useState(false); // Add state for initial question
   const [statsVisible, setStatsVisible] = useState(false); // Add state for stats visibility
+  const [magicVisible, setMagicVisible] = useState(false); // Add state for magic visibility
 
   // Function to roll a d20
   const rollDice = () => Math.floor(Math.random() * 20) + 1;
@@ -264,6 +266,8 @@ export default function HomeScreen() {
             router={router}
             statsVisible={statsVisible}
             setStatsVisible={setStatsVisible}
+            magicVisible={magicVisible} // Pass magicVisible state
+            setMagicVisible={setMagicVisible} // Pass setMagicVisible function
           />
           {/* Input Box */}
           <InputBox input={input} setInput={setInput} handleInput={handleInput} />
@@ -281,6 +285,13 @@ export default function HomeScreen() {
             <StatsPanel
               gameState={gameState}
               setStatsVisible={setStatsVisible}
+            />
+          )}
+          {/* Magic Panel */}
+          {magicVisible && (
+            <MagicPanel
+              gameState={gameState}
+              setMagicVisible={setMagicVisible}
             />
           )}
         </View>

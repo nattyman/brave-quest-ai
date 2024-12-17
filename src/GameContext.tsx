@@ -28,6 +28,7 @@ export type GameState = { // Export the GameState type
   };
   inventory: { id: string; name: string; quantity: number }[];
   equippedItems: ({ id: string; name: string; quantity: number } | null)[]; // Add equippedItems
+  magicSpells: { id: string; name: string }[]; // Add magicSpells
   story: string;
   initialQuestionAnswered: boolean;
 };
@@ -96,6 +97,10 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     },
     inventory: [], // Initialize inventory as empty
     equippedItems: [null, null], // Initialize equippedItems with two slots
+    magicSpells: [ // Initialize with placeholder spells
+      { id: 'spell1', name: 'Fireball' },
+      { id: 'spell2', name: 'Heal' },
+    ],
     story: 'Welcome, brave adventurer! What is your name?',
     initialQuestionAnswered: false,
   });
