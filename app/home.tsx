@@ -22,6 +22,7 @@ import ActionButtons from './components/ActionButtons'; // Import the ActionButt
 import InventoryPanel from './components/InventoryPanel'; // Import the InventoryPanel component
 import StoryPane from './components/StoryPane'; // Import the StoryPane component
 import InputBox from './components/InputBox'; // Import the InputBox component
+import StatsPanel from './components/StatsPanel'; // Import the StatsPanel component
 
 export default function HomeScreen() {
   const { gameState, updateGameState, addItem } = useGame(); // Get addItem from context
@@ -32,6 +33,7 @@ export default function HomeScreen() {
   const scrollViewRef = useRef<ScrollView>(null); // Add a ref for the ScrollView
   const [inventoryVisible, setInventoryVisible] = useState(false); // Add state for inventory visibility
   const [initialQuestionAnswered, setInitialQuestionAnswered] = useState(false); // Add state for initial question
+  const [statsVisible, setStatsVisible] = useState(false); // Add state for stats visibility
 
   // Function to roll a d20
   const rollDice = () => Math.floor(Math.random() * 20) + 1;
@@ -115,6 +117,14 @@ export default function HomeScreen() {
       - Level: ${gameState.playerStats.level}
       - Skills: ${gameState.playerStats.skills.join(', ')}
       - Gold: ${gameState.playerStats.gold}
+      - Strength: ${gameState.playerStats.strength}
+      - Dexterity: ${gameState.playerStats.dexterity}
+      - Intelligence: ${gameState.playerStats.intelligence}
+      - Charisma: ${gameState.playerStats.charisma}
+      - Wisdom: ${gameState.playerStats.wisdom}
+      - Constitution: ${gameState.playerStats.constitution}
+      - Stealth: ${gameState.playerStats.stealth}
+      - Perception: ${gameState.playerStats.perception}
 
       Inventory:
       ${gameState.inventory.map(item => `${item.name} (${item.quantity})`).join(', ')}
@@ -124,24 +134,54 @@ export default function HomeScreen() {
 
     Player's Command: ${command}
 
-    Random Dice Roll: ${diceRoll}
-    Use the dice roll to help determine the outcome of the player's actions.
+    Dice Rules:
+      - Determine level difficulty (1-20) for success or failure for whatever task player is attempting.
+      - A 20-sided die (d20) will be rolled to determine the outcome of actions.
+      - A roll of 1 is a critical failure-worst case scenario, and a roll of 20 is a critical success-best possible case.
+      - Add relevent proficiency, weapon, and item stats to the dice roll to determine the outcome.
+    Random d20 Dice Roll: ${diceRoll}
 
-    Response Instructions: Respond with changes to the game state in this JSON Object format:
+    Response Instructions: Respond with plus or minus changes to the game state in this JSON Object format:
       {
 
-        "playerStats": { "health": -x, "maxHealth": x, "stamina": -x, "maxStamina": x, "magic": -x, "maxMagic": x, "attack": x, "defense": x, "xp": x, "level": x, "skills": ["new skill"], "gold": x }, //Only send changes to stats and maxStats, whole numbers to add and negative numbers to subtrack. Don't use a + sign.
-        "inventory": { "add": ["wooden_staff", "small_ring"], "remove": ["health_potion"] }, // Only add items from the available items list
-        "equippedItems": ["bronze_dagger", null],
+        "playerStats": { 
+          "health": -x, 
+          "maxHealth": x, 
+          "stamina": -x, 
+          "maxStamina": x, 
+          "magic": -x, 
+          "maxMagic": x, 
+          "attack": x, 
+          "defense": x, 
+          "xp": x, 
+          "level": x, 
+          "skills": ["new skill"],
+          "gold": x, 
+          "strength": x, 
+          "dexterity": x, 
+          "intelligence": x, 
+          "charisma": x, 
+          "wisdom": x, 
+          "constitution": x, 
+          "stealth": x, 
+          "perception": x }, 
+        "inventory": { "add": ["item_id", "item_id"], "remove": ["item_id"] }, // Only add items from the available items list.
+        "equippedItems": ["item_id", null],
         "story": "The story content goes here..."
 
       }
-      Response instruction data are just examples only provide what fits in the context of the story.
-      Provide the updated game state as a plain JSON object without any formatting characters like \`\`\`
-      Nudge the player forward in the quest, but give them space to explore. 
-      Always ask what the player wants to do next inside the story JSON.
-      Character must choose to purchase items, don't purchase for them. 
-      Remember to add and remove items from intenvory as needed.
+      Response Rules:
+        - Only send changes to stats that need updated, whole numbers to add, x, and negative numbers to subtrack, -x. Don't use a + sign.
+        - If a stat is not updated, don't include it in the JSON object.
+        - Response instruction data are just examples only provide what fits in the context of the story.
+        - Provide the updated game state as a plain JSON object without any formatting characters like \`\`\`
+        - Nudge the player forward in the quest, but give them space to explore.
+        - Don't directly quote story text, paraphrase and expand on it.
+        - Always ask what the player wants to do next inside the story JSON.
+        - Character must choose to purchase items, don't purchase for them.
+        - Don't summarize combat, make player choose actions, step by step through combat
+        - Remember to add and remove items from inventory as part of the story. Include item and stat changes in the story.
+        - Only update character profeciencies when they level up, and it should be related to the story, and skills they used.
     `;
 
     addDebugMessage('\r\r###### Message Sent ######\r\r', prompt); // Add labeled message
@@ -180,6 +220,14 @@ export default function HomeScreen() {
           health: Math.max(gameState.playerStats.health + (changes.playerStats.health || 0), 0),
           gold: gameState.playerStats.gold + (changes.playerStats.gold || 0),
           xp: gameState.playerStats.xp + (changes.playerStats.xp || 0),
+          strength: gameState.playerStats.strength + (changes.playerStats.strength || 0),
+          dexterity: gameState.playerStats.dexterity + (changes.playerStats.dexterity || 0),
+          intelligence: gameState.playerStats.intelligence + (changes.playerStats.intelligence || 0),
+          charisma: gameState.playerStats.charisma + (changes.playerStats.charisma || 0),
+          wisdom: gameState.playerStats.wisdom + (changes.playerStats.wisdom || 0),
+          constitution: gameState.playerStats.constitution + (changes.playerStats.constitution || 0),
+          stealth: gameState.playerStats.stealth + (changes.playerStats.stealth || 0),
+          perception: gameState.playerStats.perception + (changes.playerStats.perception || 0),
         },
         inventory: updatedInventory,
         equippedItems: newEquippedItems,
@@ -214,6 +262,8 @@ export default function HomeScreen() {
             setInventoryVisible={setInventoryVisible}
             debug={debug}
             router={router}
+            statsVisible={statsVisible}
+            setStatsVisible={setStatsVisible}
           />
           {/* Input Box */}
           <InputBox input={input} setInput={setInput} handleInput={handleInput} />
@@ -224,6 +274,13 @@ export default function HomeScreen() {
               handleUse={handleUse}
               handleEquip={handleEquip}
               setInventoryVisible={setInventoryVisible}
+            />
+          )}
+          {/* Stats Panel */}
+          {statsVisible && (
+            <StatsPanel
+              gameState={gameState}
+              setStatsVisible={setStatsVisible}
             />
           )}
         </View>

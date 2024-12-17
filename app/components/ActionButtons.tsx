@@ -7,9 +7,11 @@ type ActionButtonsProps = {
   setInventoryVisible: (value: boolean) => void;
   debug: boolean;
   router: ReturnType<typeof useRouter>;
+  statsVisible: boolean;
+  setStatsVisible: (value: boolean) => void;
 };
 
-export default function ActionButtons({ inventoryVisible, setInventoryVisible, debug, router }: ActionButtonsProps) {
+export default function ActionButtons({ inventoryVisible, setInventoryVisible, debug, router, statsVisible, setStatsVisible }: ActionButtonsProps) {
   return (
     <View style={styles.actionButtons}>
       <TouchableOpacity
@@ -18,8 +20,11 @@ export default function ActionButtons({ inventoryVisible, setInventoryVisible, d
       >
         <Text style={styles.buttonText}>📦 Inventory</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.actionButton}>
-        <Text style={styles.buttonText}>🗺 Map</Text>
+      <TouchableOpacity
+        style={styles.actionButton}
+        onPress={() => setStatsVisible(!statsVisible)} // Toggle stats visibility
+      >
+        <Text style={styles.buttonText}>📊 Stats</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={styles.actionButton}
