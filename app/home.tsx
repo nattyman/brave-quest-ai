@@ -294,59 +294,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fef9e7',
   },
-  inventoryPanel: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#fff8e1',
-    borderTopWidth: 4,
-    borderTopColor: '#4b2e05',
-    padding: 10,
-  },
-  inventoryHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  inventoryTitle: {
-    fontSize: 18,
-    marginBottom: 10,
-  },
-  closeButton: {
-    fontSize: 16,
-    color: 'red',
-  },
-  inventoryItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 5,
-    backgroundColor: '#e6ddc9',
-    borderWidth: 2,
-    borderColor: '#4b2e05',
-    borderRadius: 4,
-    marginBottom: 5,
-  },
-  equippedItem: {
-    backgroundColor: '#d4e157', // Highlight color for equipped items
-  },
-  itemQuantity: {
-    marginRight: 10,
-  },
-  itemName: {
-    flex: 1,
-    textAlign: 'left',
-  },
-  inventoryActions: {
-    flexDirection: 'row',
-  },
-  inventoryButton: {
-    marginLeft: 5,
-    padding: 5,
-    backgroundColor: '#f8f4ec',
-    borderWidth: 1,
-    borderColor: '#4b2e05',
-    borderRadius: 4,
-  },
+
 });
 

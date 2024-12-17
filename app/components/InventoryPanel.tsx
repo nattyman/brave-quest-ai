@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { GameState } from '../../src/GameContext'; // Import the GameState type
 import basicItems from '../../story/items-basic.json'; // Import items list to check type
 
@@ -15,49 +15,54 @@ export default function InventoryPanel({ gameState, handleUse, handleEquip, setI
     <View style={styles.inventoryPanel}>
       <View style={styles.inventoryHeader}>
         <Text style={styles.inventoryTitle}>Inventory</Text>
-        <TouchableOpacity onPress={() => setInventoryVisible(false)}>
-          <Text style={styles.closeButton}>Close</Text>
-        </TouchableOpacity>
       </View>
-      {gameState.inventory.length === 0 ? (
-        <Text style={styles.emptyMessage}>Empty - So sad :(</Text>
-      ) : (
-        gameState.inventory.map((item, index) => {
-          const isEquipped = gameState.equippedItems.some(equippedItem => equippedItem?.id === item.id);
-          const itemDetails = basicItems.itemsBasic.find(i => i.id === item.id);
-          const isConsumable = itemDetails?.type === 'consumable';
+      <ScrollView style={styles.inventoryContent}>
+        {gameState.inventory.length === 0 ? (
+          <Text style={styles.emptyMessage}>Empty - So sad :(</Text>
+        ) : (
+          gameState.inventory.map((item, index) => {
+            const isEquipped = gameState.equippedItems.some(equippedItem => equippedItem?.id === item.id);
+            const itemDetails = basicItems.itemsBasic.find(i => i.id === item.id);
+            const isConsumable = itemDetails?.type === 'consumable';
 
-          return (
-            <View
-              key={index}
-              style={[
-                styles.inventoryItem,
-                isEquipped && styles.equippedItem,
-              ]}
-            >
-              <Text style={styles.itemName}>{item.name} {isEquipped && '✔️'}</Text>
-              <Text style={styles.itemQuantity}>({item.quantity})</Text>
-              <View style={styles.inventoryActions}>
-                {isConsumable ? (
-                  <TouchableOpacity
-                    style={styles.inventoryButton}
-                    onPress={() => handleUse(item.id)}
-                  >
-                    <Text>Use</Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    style={styles.inventoryButton}
-                    onPress={() => handleEquip(item.id)}
-                  >
-                    <Text>{isEquipped ? 'Stow' : 'Equip'}</Text>
-                  </TouchableOpacity>
-                )}
+            return (
+              <View
+                key={index}
+                style={[
+                  styles.inventoryItem,
+                  isEquipped && styles.equippedItem,
+                ]}
+              >
+                <Text style={styles.itemName}>{item.name} {isEquipped && '✔️'}</Text>
+                <Text style={styles.itemQuantity}>({item.quantity})</Text>
+                <View style={styles.inventoryActions}>
+                  {isConsumable ? (
+                    <TouchableOpacity
+                      style={styles.inventoryButton}
+                      onPress={() => handleUse(item.id)}
+                    >
+                      <Text>Use</Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={styles.inventoryButton}
+                      onPress={() => handleEquip(item.id)}
+                    >
+                      <Text>{isEquipped ? 'Stow' : 'Equip'}</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
               </View>
-            </View>
-          );
-        })
-      )}
+            );
+          })
+        )}
+      </ScrollView>
+      <TouchableOpacity
+        style={styles.closeButton}
+        onPress={() => setInventoryVisible(false)}
+      >
+        <Text style={styles.closeButtonText}>Close</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -71,20 +76,30 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff8e1',
     borderTopWidth: 4,
     borderTopColor: '#4b2e05',
-    padding: 10,
+    padding: 0,
   },
   inventoryHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    padding: 10,
   },
   inventoryTitle: {
     fontSize: 18,
     marginBottom: 10,
   },
   closeButton: {
+    backgroundColor: '#4b2e05',
+    paddingTop: 5,
+    paddingBottom: 5,
+    borderRadius: 4,
+    marginTop: 10,
+    width: '100%',
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    color: '#fff',
     fontSize: 16,
-    color: 'red',
   },
   inventoryItem: {
     flexDirection: 'row',
@@ -121,5 +136,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#888',
     marginTop: 20,
+  },
+  inventoryContent: {
+    padding: 10,
+    maxHeight: '80%',
   },
 });
