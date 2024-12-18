@@ -8,13 +8,13 @@
       "goal": "Investigate the disappearances and find the source of the whispers.",
       "tasks": [
         {
-          "task_name": "Speak to NPCs in Wyrdwell",
-          "objective": "Gather clues about the missing villagers by interacting with key NPCs.",
+          "task_name": "Speak to townspeople in Wyrdwell",
+          "objective": "Gather clues about the missing villagers by interacting with key townspeople.",
           "npc_dialogues": [
             {
               "name": "Elara, the Herbalist",
               "dialogues": {
-                "initial": "Bring me the Moonshade Fern. It grows at the edge of the forest, where the whispers are loudest.",
+                "initial": "Bring me the Moonshade Fern. It grows at the edge of the forest, where the whispers are loudest. Don't go into the woods unprepared.",
                 "success": "Good, you’re braver than most. The whispers are not natural—they're tied to an old magic, the kind that corrupts and devours. The Fern grows where the artifact’s magic bleeds into the land. Be careful—the deeper you go, the more dangerous it becomes.",
                 "info": "The fern feeds on the same magic that empowers the artifact. It can be used to brew potions that shield against the whispers' effects."
               }
@@ -22,10 +22,10 @@
             {
               "name": "Thorne, the Hunter",
               "dialogues": {
-                "initial": "Tracks lead to the stone circle. You’ll find more there—if you’ve the stomach for it.",
+                "initial": "Tracks lead to the stone circle. You’ll find more there—if you’ve the stomach for it. But don't go empty handed. There's more than just whispers in that dark wood.",
                 "followup": "It’s the artifact. I’ve seen its effects before. It twists creatures into monsters. Don’t let it twist you."
               },
-              "info": "Knows about the tracks leading to the stone circle and hints at corrupted creatures in the forest."
+              "info": "Knows about the tracks leading to the stone circle and hints at corrupted creatures in the forest. There are dangerous beasts lurking in the woods. Don't go in empty-handed."
             }
           ]
         },
@@ -81,13 +81,15 @@
               "description": "Twisted roots threaten to trip the player.",
               "mechanics": {
                 "check": "Dexterity",
-                "failure": "The player trips, taking minor damage."
+                "Roll": "10",
+                "failure": "The player trips, taking minor damage. -3 health"
               }
             },
             {
               "description": "Fog of whispers disorients the player.",
               "mechanics": {
                 "check": "Perception",
+                "Roll": "12",
                 "failure": "The player becomes temporarily lost, costing time or resources."
               }
             }
@@ -98,9 +100,13 @@
           "description": "Corrupted Forest Wolves ambush the player, driven mad by the artifact's influence.",
           "mechanics": {
             "abilities": {
-              "alpha_wolf": "Has glowing eyes and emits whispers, inflicting Fear on failed Willpower checks."
+              "alpha_wolf": "Has glowing eyes and emits whispers, inflicting Fear on failed Willpower checks. -10 stamina",
+              "roll": "14",
             },
-            "reward": "Wolf Fang Charm, a minor resilience boost against fear effects."
+            "damage": "5-8",
+            "defense": "2",
+            "health": "20",
+            "reward": "Upon death drops Wolf Fang Charm, a minor resilience boost against fear effects."
           }
         }
       ],

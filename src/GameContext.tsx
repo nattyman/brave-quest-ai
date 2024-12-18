@@ -17,9 +17,18 @@ export type GameState = { // Export the GameState type
     level: number;
     skills: string[];
     gold: number;
+    strength: number;
+    dexterity: number;
+    intelligence: number;
+    charisma: number;
+    wisdom: number;
+    constitution: number;
+    stealth: number;
+    perception: number;
   };
   inventory: { id: string; name: string; quantity: number }[];
   equippedItems: ({ id: string; name: string; quantity: number } | null)[]; // Add equippedItems
+  magicSpells: { id: string; name: string }[]; // Add magicSpells
   story: string;
   initialQuestionAnswered: boolean;
 };
@@ -77,9 +86,21 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
       level: 1,
       skills: [],
       gold: 50,
+      strength: 1,
+      dexterity: 1,
+      intelligence: 1,
+      charisma: 1,
+      wisdom: 1,
+      constitution: 1,
+      stealth: 1,
+      perception: 1,
     },
     inventory: [], // Initialize inventory as empty
     equippedItems: [null, null], // Initialize equippedItems with two slots
+    magicSpells: [ // Initialize with placeholder spells
+      { id: 'spell1', name: 'Fireball' },
+      { id: 'spell2', name: 'Heal' },
+    ],
     story: 'Welcome, brave adventurer! What is your name?',
     initialQuestionAnswered: false,
   });
