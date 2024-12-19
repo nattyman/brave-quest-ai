@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { GameState } from '../../src/GameContext'; // Import the GameState type
-import basicItems from '../../story/items-basic.json'; // Import items list to check type
+import itemsData from '../../story/items.json'; // Import the combined items list
 
 type InventoryPanelProps = {
   gameState: GameState;
@@ -22,7 +22,7 @@ export default function InventoryPanel({ gameState, handleUse, handleEquip, setI
         ) : (
           gameState.inventory.map((item, index) => {
             const isEquipped = gameState.equippedItems.some(equippedItem => equippedItem?.id === item.id);
-            const itemDetails = basicItems.itemsBasic.find(i => i.id === item.id);
+            const itemDetails = itemsData.items.find(i => i.id === item.id);
             const isConsumable = itemDetails?.type === 'consumable';
 
             return (

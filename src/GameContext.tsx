@@ -1,5 +1,5 @@
 import React, { useState, createContext, useContext } from 'react';
-import basicItems from '../story/items-basic.json'; // Import the basic items list
+import itemsData from '../story/items.json'; // Import the combined items list
 
 // Define the shape of the game state
 export type GameState = { // Export the GameState type
@@ -36,7 +36,6 @@ export type GameState = { // Export the GameState type
 type GameContextType = { // Export the GameContext type
   gameState: GameState; // The current state of the game.
   updateGameState: (changes: Partial<GameState>) => void; //Function to update the game state with partial changes.
-  addItem: (item: { id: string; name: string; quantity: number }) => void; // Function to add an item to the inventory
 };
 
 // Create the context for the game state
@@ -46,7 +45,7 @@ const GameContext = createContext<GameContextType | undefined>(undefined);
 // addItem as a function factory
 const createAddItem = (setGameState: React.Dispatch<React.SetStateAction<GameState>>) => 
   (item: { id: string; name: string; quantity: number }) => {
-    const itemDetails = basicItems.itemsBasic.find(i => i.id === item.id); // Find the item in the basic items list
+    const itemDetails = itemsData.items.find(i => i.id === item.id); // Find the item in the combined items list
     if (!itemDetails) { // Check if the item exists
       console.error(`Item with id ${item.id} does not exist in the available items list.`);
       return;

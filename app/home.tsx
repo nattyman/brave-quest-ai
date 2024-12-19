@@ -16,7 +16,7 @@ import { useGame } from '../src/GameContext'; // Remove addItem from import
 import { useRouter } from 'expo-router';
 import { useDebug } from '../src/DebugContext';
 import questData from '../story/quest1-milestone1.json'; // Import the quest data
-import basicItems from '../story/items-basic.json'; // Import list of available items
+import itemsData from '../story/items.json'; // Import the combined items list
 import magicSystem from '../story/spells.json'; // Import the magic system
 import StatsBar from './components/StatsBar'; // Import the StatsBar component
 import ActionButtons from './components/ActionButtons'; // Import the ActionButtons component
@@ -104,7 +104,7 @@ export default function HomeScreen() {
     ${JSON.stringify(questData)}
     
     Available Items:
-    ${JSON.stringify(basicItems)}
+    ${JSON.stringify(itemsData)}
 
     Available Spells:
     ${JSON.stringify(magicSystem)}
@@ -206,8 +206,8 @@ export default function HomeScreen() {
 
       // Add new items to the inventory
 
-      changes.inventory?.add?.forEach((itemId: string) => { // Check if the item exists in the basic items list
-        const itemDetails = basicItems.itemsBasic.find(item => item.id === itemId);
+      changes.inventory?.add?.forEach((itemId: string) => { // Check if the item exists in the combined items list
+        const itemDetails = itemsData.items.find(item => item.id === itemId);
         if (itemDetails) {
           addItem({ id: itemDetails.id, name: itemDetails.name, quantity: 1 });
         } else {
