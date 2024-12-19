@@ -183,6 +183,56 @@
         "level": 2,
         "location": ["stone_circle"],
         "value": 30
+      },
+      {
+        "name": "Mana Potion",
+        "description": "Restores 15 magic points when consumed.",
+        "type": "consumable",
+        "effect": {
+          "restore_mp": 15
+        },
+        "cost": 10
+      },
+      {
+        "name": "Fire Rune",
+        "description": "A magical rune required to cast Fireball.",
+        "type": "key_item",
+        "cost": 50
+      },
+      {
+        "name": "Light Crystal",
+        "description": "A radiant crystal required to cast Shield of Light.",
+        "type": "key_item",
+        "cost": 75
+      },
+      {
+        "id": "mana_potion",
+        "name": "Mana Potion",
+        "type": "consumable",
+        "level": 1,
+        "location": ["shops", "loot_chests", "enemy_drops"],
+        "value": 10,
+        "effect": {
+          "restore_mp": 15
+        }
+      },
+      {
+        "id": "fire_rune",
+        "name": "Fire Rune",
+        "type": "key_item",
+        "level": 3,
+        "location": ["quest_rewards", "rare_loot"],
+        "value": 50,
+        "effect": null
+      },
+      {
+        "id": "light_crystal",
+        "name": "Light Crystal",
+        "type": "key_item",
+        "level": 3,
+        "location": ["shops", "rare_loot", "special_events"],
+        "value": 75,
+        "effect": null
       }
     ]
   }

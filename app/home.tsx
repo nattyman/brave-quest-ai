@@ -17,6 +17,7 @@ import { useRouter } from 'expo-router';
 import { useDebug } from '../src/DebugContext';
 import questData from '../story/quest1-milestone1.json'; // Import the quest data
 import basicItems from '../story/items-basic.json'; // Import list of available items
+import magicSystem from '../story/spells.json'; // Import the magic system
 import StatsBar from './components/StatsBar'; // Import the StatsBar component
 import ActionButtons from './components/ActionButtons'; // Import the ActionButtons component
 import InventoryPanel from './components/InventoryPanel'; // Import the InventoryPanel component
@@ -98,11 +99,15 @@ export default function HomeScreen() {
     console.log('Dice Roll:', diceRoll);
 
     const prompt = `
+    
     Story Information:
     ${JSON.stringify(questData)}
     
     Available Items List:
     ${JSON.stringify(basicItems)}
+
+    Magic System:
+    ${JSON.stringify(magicSystem)}
 
     Story So Far:
     ${gameState.story}    
