@@ -103,10 +103,10 @@ export default function HomeScreen() {
     Story Information:
     ${JSON.stringify(questData)}
     
-    Available Items List:
+    Available Items:
     ${JSON.stringify(basicItems)}
 
-    Magic System:
+    Available Spells:
     ${JSON.stringify(magicSystem)}
 
     Story So Far:
@@ -138,6 +138,9 @@ export default function HomeScreen() {
 
       Equipped Items:
       ${gameState.equippedItems.map(item => item ? item.name : 'None').join(', ')}
+
+      Magic Spells:
+      ${gameState.magicSpells.map(spell => spell.name).join(', ')}
 
     Player's Command: ${command}
 
