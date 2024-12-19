@@ -98,101 +98,45 @@ export default function HomeScreen() {
     const diceRoll = rollDice(); // Roll a d20
     console.log('Dice Roll:', diceRoll);
 
-    const prompt = `
-    
-    Story Information:
-    ${JSON.stringify(questData)}
-    
-    Available Items:
-    ${JSON.stringify(itemsData)}
+  const prompt = `
+  Story So Far:
+  ${gameState.story}    
 
-    Available Spells:
-    ${JSON.stringify(magicSystem)}
+  Game State:
+  Player Stats:
+  - Name: ${gameState.playerStats.name}
+  - Health: ${gameState.playerStats.health}/${gameState.playerStats.maxHealth}
+  - Stamina: ${gameState.playerStats.stamina}/${gameState.playerStats.maxStamina}
+  - Magic: ${gameState.playerStats.magic}/${gameState.playerStats.maxMagic}
+  - Attack: ${gameState.playerStats.attack}
+  - Defense: ${gameState.playerStats.defense}
+  - XP: ${gameState.playerStats.xp}
+  - Level: ${gameState.playerStats.level}
+  - Skills: ${gameState.playerStats.skills.join(', ')}
+  - Gold: ${gameState.playerStats.gold}
+  - Strength: ${gameState.playerStats.strength}
+  - Dexterity: ${gameState.playerStats.dexterity}
+  - Intelligence: ${gameState.playerStats.intelligence}
+  - Charisma: ${gameState.playerStats.charisma}
+  - Wisdom: ${gameState.playerStats.wisdom}
+  - Constitution: ${gameState.playerStats.constitution}
+  - Stealth: ${gameState.playerStats.stealth}
+  - Perception: ${gameState.playerStats.perception}
 
-    Story So Far:
-    ${gameState.story}    
-    
-    Game State:
-      Player Stats:
-      - Name: ${gameState.playerStats.name}
-      - Health: ${gameState.playerStats.health}/${gameState.playerStats.maxHealth}
-      - Stamina: ${gameState.playerStats.stamina}/${gameState.playerStats.maxStamina}
-      - Magic: ${gameState.playerStats.magic}/${gameState.playerStats.maxMagic}
-      - Attack: ${gameState.playerStats.attack}
-      - Defense: ${gameState.playerStats.defense}
-      - XP: ${gameState.playerStats.xp}
-      - Level: ${gameState.playerStats.level}
-      - Skills: ${gameState.playerStats.skills.join(', ')}
-      - Gold: ${gameState.playerStats.gold}
-      - Strength: ${gameState.playerStats.strength}
-      - Dexterity: ${gameState.playerStats.dexterity}
-      - Intelligence: ${gameState.playerStats.intelligence}
-      - Charisma: ${gameState.playerStats.charisma}
-      - Wisdom: ${gameState.playerStats.wisdom}
-      - Constitution: ${gameState.playerStats.constitution}
-      - Stealth: ${gameState.playerStats.stealth}
-      - Perception: ${gameState.playerStats.perception}
+  Inventory:
+  ${gameState.inventory.map(item => `${item.name} (${item.quantity})`).join(', ')}
 
-      Inventory:
-      ${gameState.inventory.map(item => `${item.name} (${item.quantity})`).join(', ')}
+  Equipped Items:
+  ${gameState.equippedItems.map(item => item ? item.name : 'None').join(', ')}
 
-      Equipped Items:
-      ${gameState.equippedItems.map(item => item ? item.name : 'None').join(', ')}
+  Magic Spells:
+  ${gameState.magicSpells.map(spell => spell.name).join(', ')}
 
-      Magic Spells:
-      ${gameState.magicSpells.map(spell => spell.name).join(', ')}
+  Player's Command: ${command}
 
-    Player's Command: ${command}
+  Random d20 Dice Roll: ${diceRoll}
 
-    Dice Rules:
-      - Determine level difficulty (1-20) for success or failure for whatever task player is attempting.
-      - A 20-sided die (d20) will be rolled to determine the outcome of actions.
-      - A roll of 1 is a critical failure-worst case scenario, and a roll of 20 is a critical success-best possible case.
-      - Add relevent proficiency, weapon, and item stats to the dice roll to determine the outcome.
-    Random d20 Dice Roll: ${diceRoll}
-
-    Response Instructions: Respond with plus or minus changes to the game state in this JSON Object format:
-      {
-
-        "playerStats": { 
-          "health": -x, 
-          "maxHealth": x, 
-          "stamina": -x, 
-          "maxStamina": x, 
-          "magic": -x, 
-          "maxMagic": x, 
-          "attack": x, 
-          "defense": x, 
-          "xp": x, 
-          "level": x, 
-          "skills": ["new skill"],
-          "gold": x, 
-          "strength": x, 
-          "dexterity": x, 
-          "intelligence": x, 
-          "charisma": x, 
-          "wisdom": x, 
-          "constitution": x, 
-          "stealth": x, 
-          "perception": x }, 
-        "inventory": { "add": ["item_id", "item_id"], "remove": ["item_id"] }, // Only add items from the available items list.
-        "equippedItems": ["item_id", null],
-        "story": "The story content goes here..."
-
-      }
-      Response Rules:
-        - Only send changes to stats that need updated, whole numbers to add, x, and negative numbers to subtrack, -x. Don't use a + sign.
-        - If a stat is not updated, don't include it in the JSON object.
-        - Response instruction data are just examples only provide what fits in the context of the story.
-        - Provide the updated game state as a plain JSON object without any formatting characters like \`\`\`
-        - Nudge the player forward in the quest, but give them space to explore.
-        - Don't directly quote story text, paraphrase and expand on it.
-        - Always ask what the player wants to do next inside the story JSON.
-        - Character must choose to purchase items, don't purchase for them.
-        - Don't summarize combat, make player choose actions, step by step through combat
-        - Remember to add and remove items from inventory as part of the story. Include item and stat changes in the story.
-        - Only update character profeciencies when they level up, and it should be related to the story, and skills they used.
-    `;
+  `;
 
     addDebugMessage('\r\r###### Message Sent ######\r\r', prompt); // Add labeled message
 
@@ -223,6 +167,10 @@ export default function HomeScreen() {
         return item;
       }).filter(item => item.quantity > 0);
 
+      // Add new spells to the magicSpells array
+      const newSpells = changes.spells?.filter((spellName: string) => {
+        return magicSystem.magicSystem.spells.some(spell => spell.name === spellName);
+      }).map(spellName => ({ name: spellName })) ?? [];
 
       updateGameState({
         playerStats: {
@@ -241,6 +189,7 @@ export default function HomeScreen() {
         },
         inventory: updatedInventory,
         equippedItems: newEquippedItems,
+        magicSpells: [...gameState.magicSpells, ...newSpells],
         story: `${gameState.story}\n\n${playerResponse}\n\n${changes.story}`,
         initialQuestionAnswered: true, // Set to true after the first response where player gives their name
       });
