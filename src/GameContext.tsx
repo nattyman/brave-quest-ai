@@ -96,8 +96,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     },
     inventory: [], // Initialize inventory as empty
     equippedItems: [null, null], // Initialize equippedItems with two slots
-    magicSpells: [ // Initialize with placeholder spells
-      { name: 'Spark' },
+    magicSpells: [ // Initialize spells as empty
     ],
     story: 'Welcome, brave adventurer! What is your name?',
     initialQuestionAnswered: false,
