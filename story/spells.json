@@ -1,0 +1,60 @@
+{
+    "magicSystem": {
+      "spells": [
+        {
+          "name": "Spark",
+          "description": "A low-powered magical spark that deals a small amount of fire damage.",
+          "magic_cost": 5,
+          "effect": {
+            "type": "damage",
+            "value": "1d6"
+          },
+          "requirements": {
+            "level": 1,
+            "items": []
+          }
+        },
+        {
+          "name": "Healing Touch",
+          "description": "A basic spell that heals minor wounds.",
+          "magic_cost": 8,
+          "effect": {
+            "type": "heal",
+            "value": "1d8"
+          },
+          "requirements": {
+            "level": 2,
+            "items": []
+          }
+        },
+        {
+          "name": "Fireball",
+          "description": "Launches a blazing fireball at the target, dealing moderate fire damage.",
+          "magic_cost": 10,
+          "effect": {
+            "type": "damage",
+            "value": "3d6"
+          },
+          "requirements": {
+            "level": 3,
+            "items": ["Fire Rune"]
+          }
+        },
+        {
+          "name": "Shield of Light",
+          "description": "Creates a magical barrier that reduces incoming damage by 50% for 3 turns.",
+          "magic_cost": 12,
+          "effect": {
+            "type": "buff",
+            "value": "reduce_damage_50%",
+            "duration": "3_turns"
+          },
+          "requirements": {
+            "level": 3,
+            "items": ["Light Crystal"]
+          }
+        }
+      ]
+    }
+  }
+  
