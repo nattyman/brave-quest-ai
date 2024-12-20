@@ -102,7 +102,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initialQuestionAnswered: false,
   });
 
-  const xpThresholds = [0, 10, 250, 500]; // thresholds for leveling up 10 is low for testing
+  const xpThresholds = [0, 100, 250, 500]; // thresholds for leveling up 10 is low for testing
 
   // Function to update the game state with partial changes and handle level up logic
 
