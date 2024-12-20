@@ -55,6 +55,8 @@ const responseRules = `
         "inventory": { "add": ["item_id", "item_id"], "remove": ["item_id"] }, // Only add items from the available items list.
         "equippedItems": ["item_id", null],
         "spells": ["spell_name"], // Add new spells array
+        "store": ["item_id", "item_id"], // If at a store, Add store array to provide items available in the store
+        "AtStore": true, // Add AtStore boolean to indicate if the player is at a store
         "story": "The story content goes here..."
 
       }
@@ -70,6 +72,8 @@ const responseRules = `
         - Don't summarize combat, make player choose actions, step by step through combat.
         - Remember to add and remove items from inventory as part of the story. Include item and stat changes in the story.
         - Only update character profeciencies when they level up, and it should be related to the story, and skills they used.
+        - Only add items to the store array that exist in the available items list.
+        - Set AtStore to true if the player is at a store, otherwise set it to false.
 
     Dice Rules:
       - Determine level difficulty (1-20) for success or failure for whatever task player is attempting.

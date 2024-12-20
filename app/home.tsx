@@ -25,6 +25,7 @@ import StoryPane from './components/StoryPane'; // Import the StoryPane componen
 import InputBox from './components/InputBox'; // Import the InputBox component
 import StatsPanel from './components/StatsPanel'; // Import the StatsPanel component
 import MagicPanel from './components/MagicPanel'; // Import the MagicPanel component
+import Store from './components/store'; // Import the Store component
 
 export default function HomeScreen() {
   const { gameState, updateGameState, addItem } = useGame(); // Get addItem from context
@@ -37,6 +38,9 @@ export default function HomeScreen() {
   const [initialQuestionAnswered, setInitialQuestionAnswered] = useState(false); // Add state for initial question
   const [statsVisible, setStatsVisible] = useState(false); // Add state for stats visibility
   const [magicVisible, setMagicVisible] = useState(false); // Add state for magic visibility
+  const [storeVisible, setStoreVisible] = useState(false); // Add state for store visibility
+  const [storeItems, setStoreItems] = useState([]); // Add state for store items
+  const [atStore, setAtStore] = useState(false); // Add state for AtStore
 
   // Function to roll a d20
   const rollDice = () => Math.floor(Math.random() * 20) + 1;
@@ -172,6 +176,23 @@ export default function HomeScreen() {
         return magicSystem.magicSystem.spells.some(spell => spell.name === spellName);
       }).map(spellName => ({ name: spellName })) ?? [];
 
+      // Update store items if provided
+      if (changes.store) {
+        const storeItemIds = changes.store.map((itemName: string) => {
+          const item = itemsData.items.find(i => i.name === itemName);
+          return item ? item.id : null;
+        }).filter(id => id !== null);
+        setStoreItems(storeItemIds);
+        // add delay to show store
+        setTimeout(() => setStoreVisible(true), 2000);
+        setStoreVisible(true);
+      }
+
+      // Update AtStore state if provided
+      if (changes.AtStore !== undefined) {
+        setAtStore(changes.AtStore);
+      }
+
       updateGameState({
         playerStats: {
           ...gameState.playerStats,
@@ -251,6 +272,22 @@ export default function HomeScreen() {
               setMagicVisible={setMagicVisible}
             />
           )}
+          {/* Store Panel */}
+          {storeVisible && (
+            <Store
+              storeItems={storeItems}
+              onClose={() => setStoreVisible(false)}
+            />
+          )}
+          {/* Store Button */}
+          {atStore && !storeVisible && (
+            <TouchableOpacity
+              style={styles.storeButton}
+              onPress={() => setStoreVisible(true)}
+            >
+              <Text style={styles.storeButtonText}>S{"\n"}h{"\n"}o{"\n"}p</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -262,6 +299,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fef9e7',
   },
-
+  storeButton: {
+    position: 'absolute',
+    top: 70,
+    right: 0,
+    backgroundColor: '#4b2e05',
+    padding: 10,
+    borderRadius: 4,
+    // add transparency to the button
+    opacity: 0.8,
+    // make text vertical
+    //transform: [{ rotate: '90deg' }],
+  },
+  storeButtonText: {
+    color: '#fff',
+    fontSize: 14,
+  },
 });
 
