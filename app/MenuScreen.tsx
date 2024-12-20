@@ -11,16 +11,35 @@ export default function MenuScreen() {
   const handleRestart = () => {
     // Reset the game state to its initial state
     updateGameState({
-      playerStats: { health: 100, gold: 50, food: 30, wood: 20 },
-      inventory: [
-        { id: '1', name: 'Sword', quantity: 1 },
-        { id: '2', name: 'Shield', quantity: 1 },
-      ],
-      equippedItems: [null, null], // Reset equippedItems
+      playerStats: {
+        name: '',
+        health: 100,
+        maxHealth: 100,
+        stamina: 50,
+        maxStamina: 50,
+        magic: 30,
+        maxMagic: 30,
+        attack: 10,
+        defense: 5,
+        xp: 0,
+        level: 1,
+        skills: [],
+        gold: 50,
+        strength: 1,
+        dexterity: 1,
+        intelligence: 1,
+        charisma: 1,
+        wisdom: 1,
+        constitution: 1,
+        stealth: 1,
+        perception: 1,
+      },
+      inventory: [],
+      equippedItems: [null, null],
+      magicSpells: [],
       story: 'Welcome, brave adventurer! The journey ahead is perilous. What is your name?',
       initialQuestionAnswered: false,
     });
-    // navigation.navigate('home'); // Navigate back to the game
     router.push('/home');
   };
 
