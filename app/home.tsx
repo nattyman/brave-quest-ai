@@ -183,9 +183,6 @@ export default function HomeScreen() {
           return item ? item.id : null;
         }).filter(id => id !== null);
         setStoreItems(storeItemIds);
-        // add delay to show store
-        setTimeout(() => setStoreVisible(true), 2000);
-        setStoreVisible(true);
       }
 
       // Update AtStore state if provided
@@ -280,7 +277,7 @@ export default function HomeScreen() {
             />
           )}
           {/* Store Button */}
-          {atStore && !storeVisible && (
+          {atStore && (
             <TouchableOpacity
               style={styles.storeButton}
               onPress={() => setStoreVisible(true)}

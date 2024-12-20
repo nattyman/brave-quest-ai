@@ -42,27 +42,30 @@ const Store: React.FC<StoreProps> = ({ storeItems, onClose }) => {
   return (
     <View style={styles.container}>
       <ScrollView ref={scrollViewRef} style={styles.scrollView}>
-      <Text style={styles.title}>Store</Text>
-
-        {storeItems.map(itemId => {
-          const item = itemsData.items.find(i => i.id === itemId);
-          if (!item) {
-            console.error(`Item with id ${itemId} not found in itemsData`);
-            return null;
-          }
-          return (
-            <View key={item.id} style={styles.itemCard}>
-              <View style={styles.itemHeader}>
-                <Text style={styles.itemName}>{item.name}</Text>
-                <Text style={styles.itemCost}>💰 {item.value} Gold</Text>
+        <Text style={styles.title}>Store</Text>
+        {storeItems.length === 0 ? (
+          <Text style={styles.noItemsText}>No items available in the store.</Text>
+        ) : (
+          storeItems.map(itemId => {
+            const item = itemsData.items.find(i => i.id === itemId);
+            if (!item) {
+              console.error(`Item with id ${itemId} not found in itemsData`);
+              return null;
+            }
+            return (
+              <View key={item.id} style={styles.itemCard}>
+                <View style={styles.itemHeader}>
+                  <Text style={styles.itemName}>{item.name}</Text>
+                  <Text style={styles.itemCost}>💰 {item.value} Gold</Text>
+                </View>
+                <Text style={styles.itemDescription}>{item.type}</Text>
+                <TouchableOpacity style={styles.buyButton} onPress={() => handleBuy(item.id)}>
+                  <Text style={styles.buyButtonText}>Buy</Text>
+                </TouchableOpacity>
               </View>
-              <Text style={styles.itemDescription}>{item.type}</Text>
-              <TouchableOpacity style={styles.buyButton} onPress={() => handleBuy(item.id)}>
-                <Text style={styles.buyButtonText}>Buy</Text>
-              </TouchableOpacity>
-            </View>
-          );
-        })}
+            );
+          })
+        )}
       </ScrollView>
       <TouchableOpacity style={styles.closeButton} onPress={onClose}>
         <Text style={styles.closeButtonText}>Close</Text>
@@ -137,6 +140,11 @@ const styles = StyleSheet.create({
   closeButtonText: {
     color: '#fff',
     fontSize: 14,
+  },
+  noItemsText: {
+    textAlign: 'center',
+    color: '#888',
+    marginVertical: 20,
   },
 });
 
