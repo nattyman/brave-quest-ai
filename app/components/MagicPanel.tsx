@@ -5,9 +5,10 @@ import { GameState } from '../../src/GameContext'; // Import the GameState type
 type MagicPanelProps = {
   gameState: GameState;
   setMagicVisible: (value: boolean) => void;
+  handleInput: (command: string) => void; // Add handleInput to props
 };
 
-export default function MagicPanel({ gameState, setMagicVisible }: MagicPanelProps) {
+export default function MagicPanel({ gameState, setMagicVisible, handleInput }: MagicPanelProps) {
   return (
     <View style={styles.magicPanel}>
       <View style={styles.magicHeader}>
@@ -22,7 +23,7 @@ export default function MagicPanel({ gameState, setMagicVisible }: MagicPanelPro
               <Text style={styles.spellName}>{spell.name}</Text>
               <TouchableOpacity
                 style={styles.magicButton}
-                onPress={() => console.log(`Cast ${spell.name}`)} // Placeholder for casting logic
+                onPress={() => handleInput(`Cast ${spell.name}`)} // Use handleInput to send spell name
               >
                 <Text>Cast</Text>
               </TouchableOpacity>
