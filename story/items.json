@@ -187,6 +187,72 @@
       "level": 3,
       "location": ["shops", "rare_loot", "special_events"],
       "value": 75
+    },
+    {
+      "id": "fire_spell_book",
+      "name": "Fire Spell Book",
+      "type": "spellbook",
+      "level": 2,
+      "location": ["shops", "rare_loot"],
+      "value": 40,
+      "effect": {
+        "spell": "fireball"
+      }
+    },
+    {
+      "id": "ice_spell_book",
+      "name": "Ice Spell Book",
+      "type": "spellbook",
+      "level": 2,
+      "location": ["shops", "rare_loot"],
+      "value": 40,
+      "effect": {
+        "spell": "ice_shard"
+      }
+    },
+    {
+      "id": "lightning_spell_book",
+      "name": "Lightning Spell Book",
+      "type": "spellbook",
+      "level": 3,
+      "location": ["shops", "rare_loot"],
+      "value": 50,
+      "effect": {
+        "spell": "lightning_bolt"
+      }
+    },
+    {
+      "id": "spark_spell_book",
+      "name": "Spark Spell Book",
+      "type": "spellbook",
+      "level": 1,
+      "location": ["shops", "common_loot"],
+      "value": 20,
+      "effect": {
+        "spell": "spark"
+      }
+    },
+    {
+      "id": "healing_touch_spell_book",
+      "name": "Healing Touch Spell Book",
+      "type": "spellbook",
+      "level": 2,
+      "location": ["shops", "common_loot"],
+      "value": 30,
+      "effect": {
+        "spell": "healing_touch"
+      }
+    },
+    {
+      "id": "shield_of_light_spell_book",
+      "name": "Shield of Light Spell Book",
+      "type": "spellbook",
+      "level": 3,
+      "location": ["shops", "rare_loot"],
+      "value": 50,
+      "effect": {
+        "spell": "shield_of_light"
+      }
     }
   ]
 }
