@@ -172,7 +172,7 @@ export default function HomeScreen() {
       }).filter(item => item.quantity > 0);
 
       // Add new spells to the magicSpells array
-      const newSpells = changes.spells?.filter((spellName: string) => {
+      const newSpells = changes.spells?.add?.filter((spellName: string) => {
         return magicSystem.magicSystem.spells.some(spell => spell.name === spellName);
       }).map(spellName => ({ name: spellName })) ?? [];
 
