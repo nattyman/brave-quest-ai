@@ -194,6 +194,7 @@ export default function HomeScreen() {
         playerStats: {
           ...gameState.playerStats,
           health: Math.max(gameState.playerStats.health + (changes.playerStats.health || 0), 0),
+          magic: Math.max(gameState.playerStats.magic + (changes.playerStats.magic || 0), 0), 
           gold: gameState.playerStats.gold + (changes.playerStats.gold || 0),
           xp: gameState.playerStats.xp + (changes.playerStats.xp || 0),
           strength: gameState.playerStats.strength + (changes.playerStats.strength || 0),
@@ -211,6 +212,7 @@ export default function HomeScreen() {
         story: `${gameState.story}\n\n${playerResponse}\n\n${changes.story}`,
         initialQuestionAnswered: true, // Set to true after the first response where player gives their name
       });
+      console.log('Magic:', gameState.playerStats.magic + (changes.playerStats.magic || 0));
     } catch (error) {
       console.error('Failed to parse AI response:', aiResponse, error);
       updateGameState({
@@ -267,6 +269,7 @@ export default function HomeScreen() {
             <MagicPanel
               gameState={gameState}
               setMagicVisible={setMagicVisible}
+              handleInput={handleInput} // Pass handleInput function
             />
           )}
           {/* Store Panel */}
