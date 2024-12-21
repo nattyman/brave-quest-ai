@@ -3,7 +3,8 @@ import Constants from 'expo-constants';
 import questData from '../story/quest1-milestone1.json'; // Import the quest data
 import itemsData from '../story/items.json'; // Import the combined items list
 import magicSystem from '../story/spells.json'; // Import the magic system
-
+import characters from '../story/wyrdwell-characters.json'; // Import the characters
+import places from '../story/wyrdwell-places.json'; // Import the places
 
 // Use expoConfig for managed workflow
 const apiKey = Constants.expoConfig?.extra?.openaiApiKey;
@@ -18,12 +19,19 @@ const messageContent = `You are a quest generator for a medieval text-based RPG.
           
           Story Information:
           ${JSON.stringify(questData)}
+
+          Characters:
+          ${JSON.stringify(characters)}
+
+          Places:
+          ${JSON.stringify(places)}
           
           Available Items:
           ${JSON.stringify(itemsData)}
       
           Available Spells:
           ${JSON.stringify(magicSystem)}
+        
           
           `;
 

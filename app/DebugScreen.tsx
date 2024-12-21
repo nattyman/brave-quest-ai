@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, Text, TouchableOpacity, StyleSheet, Alert, Clipboard } from 'react-native';
+import { ScrollView, Text, TouchableOpacity, StyleSheet, Alert, Clipboard, View } from 'react-native';
 import { useDebug } from '../src/DebugContext';
 import { useRouter } from 'expo-router';
 
@@ -14,43 +14,60 @@ const DebugScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>Back</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={copyToClipboard} style={styles.copyButton}>
-        <Text style={styles.copyButtonText}>Copy All</Text>
-      </TouchableOpacity>
-      {messages.map((message, index) => (
-        <Text key={index} selectable style={styles.messageText}>
-          {message}
-        </Text>
-      ))}
-    </ScrollView>
+    <View style={styles.container}>
+      <View style={styles.stickyButtons}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Text style={styles.backButtonText}>Back</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={copyToClipboard} style={styles.copyButton}>
+          <Text style={styles.copyButtonText}>Copy All</Text>
+        </TouchableOpacity>
+      </View>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        {messages.map((message, index) => (
+          <Text key={index} selectable style={styles.messageText}>
+            {message}
+          </Text>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 10,
   },
-  backButton: {
+  stickyButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 10,
+  },
+  backButton: {
+    flex: 1,
+    marginRight: 5,
     padding: 10,
     backgroundColor: '#b28772',
     borderRadius: 5,
   },
   backButtonText: {
     color: '#000',
+    textAlign: 'center',
   },
   copyButton: {
-    marginBottom: 10,
+    flex: 1,
+    marginLeft: 5,
     padding: 10,
     backgroundColor: '#b28772',
     borderRadius: 5,
   },
   copyButtonText: {
     color: '#fff',
+    textAlign: 'center',
+  },
+  scrollViewContent: {
+    paddingBottom: 20,
   },
   messageText: {
     marginBottom: 5,
