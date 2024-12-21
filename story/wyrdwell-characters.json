@@ -1,0 +1,48 @@
+{
+    "characters": [
+      {
+        "id": "greta",
+        "name": "Greta",
+        "role": "Innkeeper",
+        "location_id": "restful_lantern_inn",
+        "description": "The cheerful but shrewd innkeeper who knows all the town gossip.",
+        "dialogue": {
+          "greeting": "Ah, a new face in Wyrdwell! Stay awhile, and I'll make sure you're fit for your next adventure.",
+          "rumors": "You’ve heard the whispers, haven’t you? Dangerous business. Some folk claim it’s just the wind, but I know better."
+        }
+      },
+      {
+        "id": "edwin",
+        "name": "Edwin",
+        "role": "Merchant",
+        "location_id": "wyrdwell_general_store",
+        "description": "A fidgety shopkeeper who sells basic items and buys loot.",
+        "dialogue": {
+          "greeting": "Welcome, welcome! Just ignore the creaking floorboards—it’s all part of the charm, eh?",
+          "buy_sell": "If you’re looking for supplies, you’ve come to the right place. Need to offload something?"
+        }
+      },
+      {
+        "id": "orin",
+        "name": "Master Orin",
+        "role": "Blacksmith",
+        "location_id": "black_anvil_forge",
+        "description": "A gruff but honorable blacksmith who takes pride in his craft.",
+        "dialogue": {
+          "greeting": "This hammer’s seen more battles than you ever will, lad. You want it fixed, or are you here to gawk?",
+          "advice": "If you’re heading to the woods, you’d better be prepared. Bring me the right materials, and I’ll make sure you’re ready."
+        }
+      },
+      {
+        "id": "brand",
+        "name": "Brand",
+        "role": "Blacksmith Apprentice",
+        "location_id": "black_anvil_forge",
+        "description": "A burly but kind apprentice learning the trade under Master Orin.",
+        "dialogue": {
+          "greeting": "Oh, hey there! Master Orin’s busy, but I can help with the basics."
+        }
+      }
+    ]
+  }
+  
