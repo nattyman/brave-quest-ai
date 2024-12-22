@@ -42,6 +42,27 @@
         "dialogue": {
           "greeting": "Oh, hey there! Master Orin’s busy, but I can help with the basics."
         }
+      },
+      {
+        "id": "thorne",
+        "name": "Thorne",
+        "role": "Hunter",
+        "location_id": "restful_lantern_inn",
+        "description": "A grizzled hunter with a sharp eye and a sharper wit.",
+        "dialogue": {
+          "greeting": "You’re not from around here, are you? Keep your wits about you in these woods. They’re not as quiet as they seem.",
+        }
+      },
+      {
+        "id": "elara",
+        "name": "Elara",
+        "role": "Herbalist",
+        "location_id": "restful_lantern_inn",
+        "description": "A wise herbalist who knows the secrets of the Whispering Woods.",
+        "dialogue": {
+          "greeting": "Ah, a new face in Wyrdwell! Stay awhile, and I'll make sure you're fit for your next adventure.",
+          "rumors": "You’ve heard the whispers, haven’t you? Dangerous business. Some folk claim it’s just the wind, but I know better."
+        }
       }
     ]
   }

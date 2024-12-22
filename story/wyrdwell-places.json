@@ -15,7 +15,7 @@
             "effects": ["unlock_side_quests"]
           }
         },
-        "npc_ids": ["greta"]
+        "npc_ids": ["greta", "thorne"]
       },
       {
         "id": "wyrdwell_general_store",
@@ -23,7 +23,7 @@
         "type": "store",
         "description": "A cluttered shop selling basic items, run by the nervous merchant Edwin.",
         "services": {
-          "buy_items": ["mana_potion", "bandages", "basic_provisions"],
+          "buy_items": ["Any Type"],
           "sell_items": true
         },
         "npc_ids": ["edwin"]
@@ -41,9 +41,23 @@
           "upgrade_gear": {
             "cost": "variable",
             "effects": ["increase_stats"]
-          }
+          },
+          "buy_items": ["Forged Weapons", "Forged Armor"],
+
         },
         "npc_ids": ["orin", "brand"]
+      },
+      {
+        "id": "whispering_brew",
+        "name": "The Whispering Brew",
+        "type": "shop",
+        "description": "A cozy, dimly lit shop filled with the earthy aroma of dried herbs and simmering potions. Shelves line the walls, crowded with vials of glowing liquids, jars of rare ingredients, and weathered alchemical tools. A cauldron bubbles gently in the corner, emitting a soft, green mist.",
+        "services": {
+          "buy_items": ["healing_potion", "mana_potion", "stamina_potion", "potion_whisper_shield"],
+          "sell_items": true
+        },
+        "location": "northern_edge_of_wyrdwell",
+        "npc_ids": ["elara"]
       }
     ]
   }

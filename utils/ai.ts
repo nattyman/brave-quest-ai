@@ -63,8 +63,8 @@ const responseRules = `
         "inventory": { "add": ["item_id", "item_id"], "remove": ["item_id"] }, // Only add items from the available items list.
         "equippedItems": ["item_id", null],
         "spells": { "add": ["spell_name"] }, // Add new spells when the player learns them
-        "store": ["item_id", "item_id"], // If at a store, Add store array to provide items available in the store
-        "AtStore": true, // Add AtStore boolean to indicate if the player is at a store
+        "store": ["item_id", "item_id"], // If at any place with items for sale, add store array to provide items available in the store, only use items from the available items list.
+        "AtStore": true, // Add AtStore boolean to indicate if the player is at any place with items for sale.
         "story": "The story content goes here..."
 
       }
