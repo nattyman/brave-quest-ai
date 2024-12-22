@@ -153,7 +153,6 @@ export default function HomeScreen() {
       const newEquippedItems = changes.equippedItems?.map((name: string) => gameState.inventory.find(item => item.name === name) || null) ?? gameState.equippedItems;
 
       // Add new items to the inventory
-
       changes.inventory?.add?.forEach((itemId: string) => { // Check if the item exists in the combined items list
         const itemDetails = itemsData.items.find(item => item.id === itemId);
         if (itemDetails) {
@@ -178,10 +177,7 @@ export default function HomeScreen() {
 
       // Update store items if provided
       if (changes.store) {
-        const storeItemIds = changes.store.map((itemName: string) => {
-          const item = itemsData.items.find(i => i.name === itemName);
-          return item ? item.id : null;
-        }).filter(id => id !== null);
+        const storeItemIds = changes.store.map((itemId: string) => itemId);
         setStoreItems(storeItemIds);
       }
 
