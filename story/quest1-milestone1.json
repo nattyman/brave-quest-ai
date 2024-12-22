@@ -8,6 +8,7 @@
       "goal": "Investigate the disappearances and find the source of the whispers.",
       "tasks": [
         {
+          "id": "speak_townspeople",
           "task_name": "Speak to townspeople in Wyrdwell",
           "objective": "Gather clues about the missing villagers by interacting with key townspeople.",
           "npc_dialogues": [
@@ -30,6 +31,33 @@
           ]
         },
         {
+          "id": "visit_whispering_brew",
+          "task_name": "Visit The Whispering Brew",
+          "objective": "Purchase potions or remedies from Elara to prepare for the dangers of the forest.",
+          "interaction": {
+            "npc": "Elara",
+            "shop": {
+              "recommended_items": ["whisperbane_elixir", "healing_potion"]
+            }
+          }
+        },
+        {
+          "id": "speak_to_thorne",
+          "task_name": "Speak to Thorne at the Hunter’s Lodge",
+          "objective": "Gain insights about the creatures in the forest and advice on surviving its dangers.",
+          "interaction": {
+            "npc": "Thorne",
+            "dialogue": {
+              "advice": "The wolves in the woods aren’t what they seem. Their glowing eyes betray the artifact’s touch. Stay sharp, and don’t hesitate to strike."
+            },
+            "reward": {
+              "item": "Quiver of Sharpened Arrows",
+              "effect": "Increases damage with ranged weapons in the next combat encounter."
+            }
+          }
+        },
+        {
+          "id": "retrieve_moonshade_fern",
           "task_name": "Retrieve the Moonshade Fern",
           "objective": "Venture into the Whispering Woods to retrieve the Moonshade Fern while overcoming challenges.",
           "obstacles": [
@@ -55,6 +83,7 @@
           "outcome": "The player retrieves the Moonshade Fern and senses the artifact's power growing stronger."
         },
         {
+          "id": "discover_artifact_shard",
           "task_name": "Discover a Fragment of the Whispering Artifact",
           "objective": "Investigate the stone circle and uncover a shard of the artifact.",
           "details": {
@@ -69,50 +98,17 @@
               "Thorne": "I told you not to meddle with this. That thing is a beacon for trouble. Mark my words—whatever you’re chasing, it’s not worth it."
             }
           },
-          "reward": "The player gains a Quest Item: Fragment of the Whispering Artifact.",
-          "achievement": "The shard glows faintly, revealing a hidden path deeper into the forest."
+          "reward": "The player gains a Quest Item: Fragment of the Whispering Artifact."
         }
       ],
-      "encounters": [
-        {
-          "type": "Environmental",
-          "challenges": [
-            {
-              "description": "Twisted roots threaten to trip the player.",
-              "mechanics": {
-                "check": "Dexterity",
-                "Roll": "10",
-                "failure": "The player trips, taking minor damage. -3 health"
-              }
-            },
-            {
-              "description": "Fog of whispers disorients the player.",
-              "mechanics": {
-                "check": "Perception",
-                "Roll": "12",
-                "failure": "The player becomes temporarily lost, costing time or resources."
-              }
-            }
-          ]
-        },
-        {
-          "type": "Combat",
-          "description": "Corrupted Forest Wolves ambush the player, driven mad by the artifact's influence.",
-          "mechanics": {
-            "abilities": {
-              "alpha_wolf": "Has glowing eyes and emits whispers, inflicting Fear on failed Willpower checks. -10 stamina",
-              "roll": "14",
-            },
-            "damage": "5-8",
-            "defense": "2",
-            "health": "20",
-            "reward": "Upon death drops Wolf Fang Charm, a minor resilience boost against fear effects."
-          }
+      "final_achievement": {
+        "id": "shard_power_unleashed",
+        "description": "The Shard's Power Unleashed",
+        "effect": "Upon holding the fragment, the player briefly glimpses the artifact’s full form and feels a surge of energy. The shard resonates, revealing the path deeper into the forest.",
+        "reward": {
+          "item": "Resonating Shard",
+          "effect": "Unlocks additional dialogue with Elara and Thorne, offering new insights and side quests."
         }
-      ],
-      "achievement": {
-        "description": "Unlock the hidden path into the forest.",
-        "effect": "The artifact shard glows brightly, revealing the way forward."
       }
     }
   }

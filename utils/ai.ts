@@ -37,37 +37,67 @@ const messageContent = `You are a quest generator for a medieval text-based RPG.
 
 const responseRules = `
   Response Instructions: Respond with plus or minus changes to the game state in this JSON Object format:
+ {
+  "playerStats": { 
+    "health": -x, 
+    "maxHealth": x, 
+    "stamina": -x, 
+    "maxStamina": x, 
+    "magic": -x, 
+    "maxMagic": x, 
+    "attack": x, 
+    "defense": x, 
+    "xp": x, 
+    "level": x, 
+    "skills": ["new skill"],
+    "gold": x, 
+    "strength": x, 
+    "dexterity": x, 
+    "intelligence": x, 
+    "charisma": x, 
+    "wisdom": x, 
+    "constitution": x, 
+    "stealth": x, 
+    "perception": x 
+  }, 
+  "inventory": { 
+    "add": ["item_id", "item_id"], 
+    "remove": ["item_id"] 
+  }, 
+  "equippedItems": ["item_id", null],
+  "spells": { 
+    "add": ["spell_name"] 
+  }, 
+  "store": ["item_id", "item_id"], 
+  "AtStore": true, 
+  "tasks": {
+    "add": [
       {
-
-        "playerStats": { 
-          "health": -x, 
-          "maxHealth": x, 
-          "stamina": -x, 
-          "maxStamina": x, 
-          "magic": -x, 
-          "maxMagic": x, 
-          "attack": x, 
-          "defense": x, 
-          "xp": x, 
-          "level": x, 
-          "skills": ["new skill"],
-          "gold": x, 
-          "strength": x, 
-          "dexterity": x, 
-          "intelligence": x, 
-          "charisma": x, 
-          "wisdom": x, 
-          "constitution": x, 
-          "stealth": x, 
-          "perception": x }, 
-        "inventory": { "add": ["item_id", "item_id"], "remove": ["item_id"] }, // Only add items from the available items list.
-        "equippedItems": ["item_id", null],
-        "spells": { "add": ["spell_name"] }, // Add new spells when the player learns them
-        "store": ["item_id", "item_id"], // If at any place with items for sale, add store array to provide items available in the store, only use items from the available items list.
-        "AtStore": true, // Add AtStore boolean to indicate if the player is at any place with items for sale.
-        "story": "The story content goes here..."
-
+        "id": "task_id", 
+        "name": "Task Name", 
+        "description": "Task Description"
       }
+    ],
+    "complete": ["task_id"]
+  },
+  "achievements": {
+    "add": [
+      {
+        "id": "achievement_id", 
+        "name": "Achievement Name", 
+        "description": "Achievement Description",
+        "reward": { 
+          "xp": x, 
+          "gold": x, 
+          "items": ["item_id"]
+        }
+      }
+    ],
+    "complete": ["achievement_id"]
+  },
+  "story": "The story content goes here..."
+}
+
     Response Rules:
         - Only send changes to stats that need updated, whole numbers to add, x, and negative numbers to subtrack, -x. Don't use a + sign.
         - If a stat is not updated, don't include it in the JSON object.
