@@ -50,7 +50,7 @@ const responseRules = `
     "xp": x, 
     "level": x, 
     "skills": ["new skill"],
-    "gold": x, 
+    "gold": x, // Add or subtract gold
     "strength": x, 
     "dexterity": x, 
     "intelligence": x, 
@@ -69,19 +69,19 @@ const responseRules = `
     "add": ["spell_name"] 
   }, 
   "store": ["item_id", "item_id"], 
-  "AtStore": true, 
+  "AtStore": true,  // Set to true if player is at any type of shop or place to buy items
   "tasks": {
-    "add": [
+    "add": [ // add new tasks
       {
         "id": "task_id", 
         "name": "Task Name", 
         "description": "Task Description"
       }
     ],
-    "complete": ["task_id"]
+    "complete": ["task_id"] // mark task as completed
   },
   "achievements": {
-    "add": [
+    "add": [ // add new achievements
       {
         "id": "achievement_id", 
         "name": "Achievement Name", 
@@ -93,7 +93,7 @@ const responseRules = `
         }
       }
     ],
-    "complete": ["achievement_id"]
+    "complete": ["achievement_id"] // mark achievement as completed
   },
   "story": "The story content goes here..."
 }
@@ -106,20 +106,21 @@ const responseRules = `
         - Nudge the player forward in the quest, but give them space to explore.
         - Don't directly quote story text, paraphrase and expand on it.
         - Always ask what the player wants to do next inside the story JSON.
-        - Character must choose to purchase items, don't purchase for them.
-        - Don't summarize combat, make player choose actions, step by step through combat.
+        - Character must choose to purchase items inside the app, don't purchase for them.
+        - Don't summarize combat, make player choose actions step by step through combat.
         - Remember to add and remove items from inventory as part of the story. Include item and stat changes in the story.
         - Only update character proficiencies when they level up, and it should be related to the story, and skills they used.
         - Only add items to the store array that exist in the available items list.
-        - Set AtStore to true if the player is at a store, otherwise set it to false.
+        - Set AtStore to true if the player is at anykind of shopt with items to buy, otherwise set it to false.
         - Add and complete tasks and achievements as part of the story.
         - Include the active task in the response.
+        - Only respond in the structured JSON format provided.
     Dice Rules:
       - Determine level difficulty (1-20) for success or failure for whatever task player is attempting.
       - A 20-sided die (d20) will be rolled to determine the outcome of actions.
       - A roll of 1 is a critical failure-worst case scenario, and a roll of 20 is a critical success-best possible case.
       - Add relevent proficiency, weapon, and item stats to the dice roll to determine the outcome.
-      
+      - Don't use the term NPC
    `;
 
 export async function getAIResponse(prompt: string): Promise<string> {
