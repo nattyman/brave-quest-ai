@@ -26,6 +26,8 @@ import InputBox from './components/InputBox'; // Import the InputBox component
 import StatsPanel from './components/StatsPanel'; // Import the StatsPanel component
 import MagicPanel from './components/MagicPanel'; // Import the MagicPanel component
 import Store from './components/store'; // Import the Store component
+import TaskBar from './components/TaskBar'; // Import the TaskBar component
+import TaskPanel from './components/TaskPanel'; // Import the TaskPanel component
 
 export default function HomeScreen() {
   const { gameState, updateGameState, addItem } = useGame(); // Get addItem from context
@@ -41,6 +43,7 @@ export default function HomeScreen() {
   const [storeVisible, setStoreVisible] = useState(false); // Add state for store visibility
   const [storeItems, setStoreItems] = useState([]); // Add state for store items
   const [atStore, setAtStore] = useState(false); // Add state for AtStore
+  const [taskPanelVisible, setTaskPanelVisible] = useState(false); // Add state for task panel visibility
 
   // Function to roll a d20
   const rollDice = () => Math.floor(Math.random() * 20) + 1;
@@ -140,6 +143,8 @@ export default function HomeScreen() {
 
   Random d20 Dice Roll: ${diceRoll}
 
+  Active Task: ${gameState.activeTask ? gameState.tasks.find(task => task.id === gameState.activeTask)?.name : 'None'}
+
   `;
 
     addDebugMessage('\r\r###### Message Sent ######\r\r', prompt); // Add labeled message
@@ -207,6 +212,15 @@ export default function HomeScreen() {
         magicSpells: [...gameState.magicSpells, ...newSpells],
         story: `${gameState.story}\n\n${playerResponse}\n\n${changes.story}`,
         initialQuestionAnswered: true, // Set to true after the first response where player gives their name
+        tasks: {
+          add: changes.tasks?.add ?? [],
+          complete: changes.tasks?.complete ?? [],
+        },
+        achievements: {
+          add: changes.achievements?.add ?? [],
+          complete: changes.achievements?.complete ?? [],
+        },
+        activeTask: changes.activeTask ?? gameState.activeTask,
       });
       console.log('Magic:', gameState.playerStats.magic + (changes.playerStats.magic || 0));
     } catch (error) {
@@ -227,6 +241,8 @@ export default function HomeScreen() {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.container}>
+          {/* Task Bar */}
+          <TaskBar gameState={gameState} setTaskPanelVisible={setTaskPanelVisible} />
           {/* Stats Bar */}
           <StatsBar gameState={gameState} debug={debug} setDebug={setDebug} />
           {/* Story Pane */}
@@ -266,6 +282,14 @@ export default function HomeScreen() {
               gameState={gameState}
               setMagicVisible={setMagicVisible}
               handleInput={handleInput} // Pass handleInput function
+            />
+          )}
+          {/* Task Panel */}
+          {taskPanelVisible && (
+            <TaskPanel
+              gameState={gameState}
+              setTaskPanelVisible={setTaskPanelVisible}
+              updateGameState={updateGameState}
             />
           )}
           {/* Store Panel */}
@@ -310,6 +334,16 @@ const styles = StyleSheet.create({
   storeButtonText: {
     color: '#fff',
     fontSize: 14,
+  },
+  taskBar: {
+    backgroundColor: '#c2a772',
+    padding: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: '#4b2e05',
+  },
+  taskBarText: {
+    fontSize: 14,
+    color: '#4b2e05',
   },
 });
 
