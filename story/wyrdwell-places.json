@@ -15,7 +15,7 @@
             "effects": ["unlock_side_quests"]
           }
         },
-        "npc_ids": ["greta", "thorne"]
+        "character_ids": ["greta", "thorne"]
       },
       {
         "id": "wyrdwell_general_store",
@@ -23,10 +23,10 @@
         "type": "store",
         "description": "A cluttered shop selling basic items, run by the nervous merchant Edwin.",
         "services": {
-          "buy_items": ["Any Type"],
+          "buy_items": ["include weapons, armor, potions, etc."],
           "sell_items": true
         },
-        "npc_ids": ["edwin"]
+        "character_ids": ["edwin"]
       },
       {
         "id": "black_anvil_forge",
@@ -45,7 +45,7 @@
           "buy_items": ["Forged Weapons", "Forged Armor"],
 
         },
-        "npc_ids": ["orin", "brand"]
+        "character_ids": ["orin", "brand"]
       },
       {
         "id": "whispering_brew",
@@ -57,7 +57,7 @@
           "sell_items": true
         },
         "location": "northern_edge_of_wyrdwell",
-        "npc_ids": ["elara"]
+        "character_ids": ["elara"]
       }
     ]
   }

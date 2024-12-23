@@ -11,7 +11,7 @@
           "id": "speak_townspeople",
           "task_name": "Speak to townspeople in Wyrdwell",
           "objective": "Gather clues about the missing villagers by interacting with key townspeople.",
-          "npc_dialogues": [
+          "character_dialogues": [
             {
               "name": "Elara, the Herbalist",
               "dialogues": {
@@ -35,7 +35,7 @@
           "task_name": "Visit The Whispering Brew",
           "objective": "Purchase potions or remedies from Elara to prepare for the dangers of the forest.",
           "interaction": {
-            "npc": "Elara",
+            "character": "Elara",
             "shop": {
               "recommended_items": ["whisperbane_elixir", "healing_potion"]
             }
@@ -46,7 +46,7 @@
           "task_name": "Speak to Thorne at the Hunter’s Lodge",
           "objective": "Gain insights about the creatures in the forest and advice on surviving its dangers.",
           "interaction": {
-            "npc": "Thorne",
+            "character": "Thorne",
             "dialogue": {
               "advice": "The wolves in the woods aren’t what they seem. Their glowing eyes betray the artifact’s touch. Stay sharp, and don’t hesitate to strike."
             },
@@ -93,7 +93,7 @@
               "success": "The player resists the shard's influence.",
               "failure": "The player is briefly overwhelmed, experiencing visions of fear or temptation."
             },
-            "npc_reactions": {
+            "character_reactions": {
               "Elara": "This shard... it’s part of something larger. Something that shouldn’t exist. If there are more pieces, they must be destroyed before the whispers consume us all.",
               "Thorne": "I told you not to meddle with this. That thing is a beacon for trouble. Mark my words—whatever you’re chasing, it’s not worth it."
             }
