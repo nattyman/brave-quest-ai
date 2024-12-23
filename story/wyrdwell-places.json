@@ -53,7 +53,7 @@
         "type": "shop",
         "description": "A cozy, dimly lit shop filled with the earthy aroma of dried herbs and simmering potions. Shelves line the walls, crowded with vials of glowing liquids, jars of rare ingredients, and weathered alchemical tools. A cauldron bubbles gently in the corner, emitting a soft, green mist.",
         "services": {
-          "buy_items": ["healing_potion", "mana_potion", "stamina_potion", "potion_whisper_shield"],
+          "buy_items": ["health_potion", "magic_potion", "stamina_potion", "potion_whisper_shield"],
           "sell_items": true
         },
         "location": "northern_edge_of_wyrdwell",

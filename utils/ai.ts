@@ -109,10 +109,11 @@ const responseRules = `
         - Character must choose to purchase items, don't purchase for them.
         - Don't summarize combat, make player choose actions, step by step through combat.
         - Remember to add and remove items from inventory as part of the story. Include item and stat changes in the story.
-        - Only update character profeciencies when they level up, and it should be related to the story, and skills they used.
+        - Only update character proficiencies when they level up, and it should be related to the story, and skills they used.
         - Only add items to the store array that exist in the available items list.
         - Set AtStore to true if the player is at a store, otherwise set it to false.
-
+        - Add and complete tasks and achievements as part of the story.
+        - Include the active task in the response.
     Dice Rules:
       - Determine level difficulty (1-20) for success or failure for whatever task player is attempting.
       - A 20-sided die (d20) will be rolled to determine the outcome of actions.

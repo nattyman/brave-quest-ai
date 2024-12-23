@@ -31,6 +31,9 @@ export type GameState = { // Export the GameState type
   magicSpells: { name: string }[]; // Add magicSpells
   story: string;
   initialQuestionAnswered: boolean;
+  tasks: { id: string; name: string; description: string; status: 'open' | 'active' | 'completed' }[];
+  achievements: { id: string; name: string; description: string; reward: { xp: number; gold: number; items: string[] } }[];
+  activeTask: string | null;
 };
 
 type GameContextType = { // Export the GameContext type
@@ -100,6 +103,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
     ],
     story: 'Welcome, brave adventurer! What is your name?',
     initialQuestionAnswered: false,
+    tasks: [],
+    achievements: [],
+    activeTask: null,
   });
 
   const xpThresholds = [0, 100, 250, 500]; // thresholds for leveling up 10 is low for testing
@@ -146,10 +152,36 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({ children
         changes.story = `${changes.story ?? ''}\n\n${levelUpMessage}`;
       }
 
+      // Handle tasks
+      const newTasks = [...prevState.tasks];
+      changes.tasks?.add?.forEach(task => {
+        newTasks.push({ ...task, status: 'open' });
+      });
+      changes.tasks?.complete?.forEach(taskId => {
+        const task = newTasks.find(t => t.id === taskId);
+        if (task) task.status = 'completed';
+      });
+
+      // Set the first task as active if no active task is set
+      const activeTask = prevState.activeTask ?? (newTasks.length > 0 ? newTasks[0].id : null);
+
+      // Handle achievements
+      const newAchievements = [...prevState.achievements];
+      changes.achievements?.add?.forEach(achievement => {
+        newAchievements.push(achievement);
+      });
+      changes.achievements?.complete?.forEach(achievementId => {
+        const achievement = newAchievements.find(a => a.id === achievementId);
+        if (achievement) achievement.status = 'completed';
+      });
+
       return {
         ...prevState,
         ...changes,
         playerStats: newPlayerStats,
+        tasks: newTasks,
+        achievements: newAchievements,
+        activeTask: changes.activeTask ?? activeTask,
         inventory: changes.inventory ?? prevState.inventory, // Ensure inventory is always defined
         equippedItems: changes.equippedItems ?? prevState.equippedItems, // Update equippedItems
         story: changes.story ?? prevState.story,
